@@ -1,0 +1,27 @@
+.App{
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+.form{
+    display: flex;
+    flex-direction: column;
+}
+
+label{
+    width: 500px;
+}
+
+.completeDiv {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.issueBox {
+    background-color: aqua;
+    padding: 30px;
+    border-radius: 20px;
+    margin: 3ch;
+}
