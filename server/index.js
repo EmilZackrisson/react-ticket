@@ -30,6 +30,12 @@ app.post('/api/insert', (req, res) => {
     const senderName = req.body.senderName;
     const issue = req.body.issue;
     const complete = req.body.complete;
+    const email = req.body.senderEmail;
+
+    if(senderName == "" | issue == "" | email == ""){
+        res.sendStatus(406).send("Not Acceptable");
+        return;
+    }
 
     // const senderName = "Emil";
     // const issue = "req.body.issue";
@@ -37,10 +43,10 @@ app.post('/api/insert', (req, res) => {
 
     // console.log(senderName, issue, complete);
 
-    const sqlInsert = "INSERT INTO tickets (senderName, issue, complete) VALUES ('" + senderName + "', '" + issue + "', '" + complete + "' );"
+    const sqlInsert = "INSERT INTO tickets (senderName, issue, complete, senderEmail) VALUES ('" + senderName + "', '" + issue + "', '" + complete + "', '" + email + "' );"
     db.query(
         sqlInsert,
-        [senderName, issue, complete],
+        [senderName, issue, complete, email],
         (err, result) => {
             if (err) {
                 console.log(err);
@@ -65,10 +71,31 @@ app.patch('/api/patch/complete', (req, res) => {
     db.query(sqlInsert, (err, result) => {
         if (err) {
             console.log(err);
-            res.send(500, err);
+            res.sendStatus(500).send(err);
         }
         else {
             res.send("Update completed succesful");
+        }
+    })
+})
+
+//Update issue
+app.patch('/api/patch/issue', (req, res) => {
+    
+    const id = req.body.id;
+    const issue = req.body.issue;
+
+    console.log("ID: ", id, " issue: ", issue);
+    console.log(req.body);
+
+    const sqlInsert = "UPDATE tickets SET issue = '" + issue + "' WHERE id = '" + id + "';";
+    db.query(sqlInsert, (err, result) => {
+        if (err) {
+            console.log(err);
+            res.sendStatus(500).send(err);
+        }
+        else {
+            res.send("Update issue succesful");
         }
     })
 })
