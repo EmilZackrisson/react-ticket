@@ -2,7 +2,7 @@ const express = require("express");
 const app = express();
 const cors = require("cors");
 const mysql = require("mysql");
-const bodyParser = require("body-parser");
+// const bodyParser = require("body-parser");
 
 const db = mysql.createPool({
     host: "192.168.1.20",
@@ -12,9 +12,13 @@ const db = mysql.createPool({
     database: "react-ticket"
 })
 
-app.use(cors());
+
 app.use(express.json());
-app.use(bodyParser.urlencoded({ extended: true }))
+app.use(express.urlencoded({ extended: true }));
+// app.use(bodyParser.urlencoded({extended: true}))
+app.use(cors());
+
+
 
 
 
@@ -37,12 +41,6 @@ app.post('/api/insert', (req, res) => {
         return;
     }
 
-    // const senderName = "Emil";
-    // const issue = "req.body.issue";
-    // const complete = false;
-
-    // console.log(senderName, issue, complete);
-
     const sqlInsert = "INSERT INTO tickets (senderName, issue, complete, senderEmail) VALUES ('" + senderName + "', '" + issue + "', '" + complete + "', '" + email + "' );"
     db.query(
         sqlInsert,
@@ -53,19 +51,26 @@ app.post('/api/insert', (req, res) => {
                 res.sendStatus(500);
             }
             else {
+                
                 res.sendStatus(200);
+                
             }
         })
 })
 
 //Update complete in mysql
-app.patch('/api/patch/complete', (req, res) => {
+app.post('/api/patch/complete', (req, res) => {
     
     const id = req.body.id;
     const complete = req.body.complete;
 
+    if(!id){
+        res.sendStatus(500);
+        res.send("no id")
+    }
+
     console.log("ID: ", id, " complete: ", complete);
-    console.log(req.body);
+    // console.log(req.body);
 
     const sqlInsert = "UPDATE tickets SET complete = " + complete + " " + "WHERE id = " + id + "";
     db.query(sqlInsert, (err, result) => {
@@ -100,18 +105,22 @@ app.patch('/api/patch/issue', (req, res) => {
     })
 })
 
-app.delete("/api/delete", (req, res) => {
+app.post("/api/delete/issue", (req, res) => {
     
     const id = req.body.id;
+    console.log(req.body);
+    
+    // res.sendStatus(500);
 
-    const sqlInsert = "DELETE FROM tickets WHERE id = " + id + "";
-    db.query(sqlInsert, (err, result) => {
+    const sqlDelete = "DELETE FROM tickets WHERE id = " + id + ";";
+    db.query(sqlDelete, (err, result) => {
         if (err) {
             console.log(err);
-            res.send(500, err);
+            res.sendStatus(500);
+            // res.send(err);
         }
         else {
-            res.send("Update completed succesful");
+            res.send("delete succesful");
         }
     })
 })
