@@ -1,0 +1,17 @@
+services:
+  server:
+    image: react-ticket-server
+    ports:
+      - "3001:3001"
+    environment:
+      - MYSQL_HOST="192.168.1.20"
+      - MYSQL_POST="3307"
+      - MYSQL_USER="react-ticket"
+      - MYSQL_PASS="react-ticket"
+      - MYSQL_DATABASE="react-ticket"
+  client:
+    image: react-ticket-client
+    ports:
+      - "3000:3000"
+    environment:
+      - MYSQL_HOST="192.168.1.20"

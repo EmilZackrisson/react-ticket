@@ -16,8 +16,13 @@ function App() {
 
   const debug = true;
 
+  console.log("docker env: ", process.env.MYSQL_HOST);
+
   //react hook form
   const { register, handleSubmit, formState: { errors } } = useForm();
+
+  // const process.env.MYSQL_HOST = process.env.MYSQL_HOST;
+  // console.log("mysql host: ",process.env.MYSQL_HOST);
 
   const onSubmit = data => {
     console.log(data);
@@ -47,7 +52,7 @@ function App() {
     if (debug) {
       console.log("submit issue run")
     }
-    Axios.post("http://192.168.1.69:3001/api/insert", {
+    Axios.post("http://localhost:3001/api/insert", {
       senderName: senderName,
       issue: issue,
       complete: complete,
@@ -102,7 +107,7 @@ function App() {
       console.log(id, completeStatus)
     }
     // console.log(id, completeStatus);
-    Axios.post("http://192.168.1.69:3001/api/patch/complete", {
+    Axios.post("http://localhost:3001/api/patch/complete", {
       complete: completeStatus,
       id: id,
     }).then(() => {
@@ -116,7 +121,7 @@ function App() {
 
   function updateIssue(id, issue) {
     // console.log(id, completeStatus);
-    Axios.patch("http://192.168.1.69:3001/api/patch/issue", {
+    Axios.patch("http://localhost:3001/api/patch/issue", {
       issue: issue,
       id: id,
     }).then(() => {
@@ -127,7 +132,7 @@ function App() {
 
   function deleteIssue(id) {
     console.log(id, "delete");
-    Axios.post("http://192.168.1.69:3001/api/delete/issue", {
+    Axios.post("http://localhost:3001/api/delete/issue", {
       id: id,
     }).then(() => {
       // setIssuesList([...issuesList, { senderName: senderName, issue: issue, complete: complete }])
@@ -138,17 +143,17 @@ function App() {
 
   return (
     <div className="flex justify-center flex-col items-center w-full">
-      <div class="bg-yellow-100 rounded-lg py-5 px-6 mb-3 text-base text-yellow-700 inline-flex items-center w-full" role="alert">
-        <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="exclamation-triangle" class="w-4 h-4 mr-2 fill-current" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512">
+      <div className="bg-yellow-100 rounded-lg py-5 px-6 mb-3 text-base text-yellow-700 inline-flex items-center w-full" role="alert">
+        <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="exclamation-triangle" className="w-4 h-4 mr-2 fill-current" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512">
           <path fill="currentColor" d="M569.517 440.013C587.975 472.007 564.806 512 527.94 512H48.054c-36.937 0-59.999-40.055-41.577-71.987L246.423 23.985c18.467-32.009 64.72-31.951 83.154 0l239.94 416.028zM288 354c-25.405 0-46 20.595-46 46s20.595 46 46 46 46-20.595 46-46-20.595-46-46-46zm-43.673-165.346l7.418 136c.347 6.364 5.609 11.346 11.982 11.346h48.546c6.373 0 11.635-4.982 11.982-11.346l7.418-136c.375-6.874-5.098-12.654-11.982-12.654h-63.383c-6.884 0-12.356 5.78-11.981 12.654z"></path>
         </svg>
         Denna applikation är fortfarande i alpha, den kanske inte alltid fungerar som den ska.
       </div>
       <header className="w-full">
-        <div class="text-center bg-gray-50 text-gray-800 py-20 px-6">
-          <h1 class="text-5xl font-bold mt-0 mb-6">Emil Ticket System</h1>
-          <h3 class="text-3xl font-bold mb-8">Hemmagjort ticket-system byggt med React, NodeJS och MySQL</h3>
-          {/* <a class="inline-block px-6 py-2.5 bg-blue-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out" data-mdb-ripple="true" data-mdb-ripple-color="light" href="#!" role="button">Get started</a> */}
+        <div className="text-center bg-gray-50 text-gray-800 py-20 px-6">
+          <h1 className="text-5xl font-bold mt-0 mb-6">Emil Ticket System</h1>
+          <h3 className="text-3xl font-bold mb-8">Hemmagjort ticket-system byggt med React, NodeJS och MySQL</h3>
+          {/* <a className="inline-block px-6 py-2.5 bg-blue-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out" data-mdb-ripple="true" data-mdb-ripple-color="light" href="#!" role="button">Get started</a> */}
         </div>
       </header>
 
@@ -255,19 +260,19 @@ function App() {
           //   </div>
           // </div>
 
-          <div class="flex justify-center mt-10 w-full">
-            <div class="block p-6 rounded-lg shadow-lg bg-white w-6/12">
+          <div className="flex justify-center mt-10 w-full">
+            <div className="block p-6 rounded-lg shadow-lg bg-white w-6/12">
             <div className="float-right fixed bg-red-600 w-100 h-2"></div>
-              <h5 class="text-gray-900 text-xl leading-tight font-medium mb-2">#{val.id} {val.issue}</h5>
-              <p class="text-gray-700 text-base mb-2">
+              <h5 className="text-gray-900 text-xl leading-tight font-medium mb-2">#{val.id} {val.issue}</h5>
+              <p className="text-gray-700 text-base mb-2">
                 {val.issue}
               </p>
-              <p class="text-gray-700 text-base mb-4">
+              <p className="text-gray-700 text-base mb-4">
                 {val.senderName} - <a href={mailto}>{val.senderEmail}</a>
                 </p>
 
               <div className="flex flex-row items-center">
-                <div class="form-check flex items-center">
+                <div className="form-check flex items-center">
                   <input checked={val.complete} onChange={(e) => {
                     if (val.complete === 1) {
                       updateComplete(val.id, 0)
@@ -276,15 +281,15 @@ function App() {
                       updateComplete(val.id, 1)
                     }
                   }}
-                    class="form-check-input appearance-none h-4 w-4 border border-gray-300 rounded-sm bg-white checked:bg-blue-600 checked:border-blue-600 focus:outline-none transition duration-200  bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer" type="checkbox" value="" id="flexCheckDefault" />
-                  <label class="form-check-label inline-block text-gray-800" for="flexCheckDefault">
+                    className="form-check-input appearance-none h-4 w-4 border border-gray-300 rounded-sm bg-white checked:bg-blue-600 checked:border-blue-600 focus:outline-none transition duration-200  bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer" type="checkbox" value="" id="flexCheckDefault" />
+                  <label className="form-check-label inline-block text-gray-800" htmlFor="flexCheckDefault">
                     Markera som klar
                   </label>
                 </div>
-                <div class="mb-3  xl:w-96 flex gap-3 ml-5 items-center">
+                <div className="mb-3  xl:w-96 flex gap-3 ml-5 items-center">
                   <input
                     type="text"
-                    class="form-control block
+                    className="form-control block
         w-full
         px-3
         py-1.5
@@ -310,14 +315,14 @@ function App() {
                     onClick={() => updateIssue(val.id, issueUpdate)}
                     data-mdb-ripple="true"
                     data-mdb-ripple-color="light"
-                    class="inline-block px-6 py-2.5 bg-blue-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out"
+                    className="inline-block px-6 py-2.5 bg-blue-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out"
                   >Uppdatera</button>
                   <button
                     type="button"
                     onClick={() => deleteIssue(val.id)}
                     data-mdb-ripple="true"
                     data-mdb-ripple-color="light"
-                    class="inline-block px-6 py-2.5 bg-red-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-red-700 hover:shadow-lg focus:bg-red-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-red-800 active:shadow-lg transition duration-150 ease-in-out"
+                    className="inline-block px-6 py-2.5 bg-red-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-red-700 hover:shadow-lg focus:bg-red-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-red-800 active:shadow-lg transition duration-150 ease-in-out"
                   >Ta bort</button>
                 </div>
               </div>

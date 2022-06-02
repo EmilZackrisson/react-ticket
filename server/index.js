@@ -2,7 +2,23 @@ const express = require("express");
 const app = express();
 const cors = require("cors");
 const mysql = require("mysql");
+const discord = require("./discord.js");
+const higestId = require("./highestId.js")
 // const bodyParser = require("body-parser");
+
+// if(process.env.MYSQL_HOST != ""){
+//     const host = process.env.MYSQL_HOST;
+//     const port = process.env.MYSQL_PORT;
+//     const user = process.env.MYSQL_USER;
+//     const pass = process.env.MYSQL_PASS;
+//     const database = process.env.MYSQL_DATABASE;
+// } else{
+//     const mySqlost = "192.168.1.20";
+//     const port = "3307";
+//     const user = "react-ticket";
+//     const pass = "react-ticket";
+//     const database = "react-ticket";
+// }
 
 const db = mysql.createPool({
     host: "192.168.1.20",
@@ -13,12 +29,12 @@ const db = mysql.createPool({
 })
 
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+// app.use(express.json());
+// app.use(express.urlencoded({ extended: true }));
 // app.use(bodyParser.urlencoded({extended: true}))
 app.use(cors());
 
-
+// discord.send("Hej", "Emil", 51);
 
 
 
@@ -26,6 +42,8 @@ app.get("/api/get", (req, res) => {
     const sqlSelect = "SELECT * FROM tickets";
     db.query(sqlSelect, (err, result) => {
         res.send(result);
+        // console.log(result)
+        // notifyNewIssue(result);
     })
 })
 
@@ -53,7 +71,7 @@ app.post('/api/insert', (req, res) => {
             else {
                 
                 res.sendStatus(200);
-                
+                notifyNewIssue();
             }
         })
 })
@@ -130,6 +148,21 @@ app.post("/api/post/test", (req, res) => {
 
     res.send(body);
 })
+
+function notifyNewIssue(json){
+    
+    let newestId = higestId.higest(json);
+    let newestIssue;
+    // console.log(newestIssue)
+    // discord.send("hej", "hej", 69)
+
+    const sqlSelect = "SELECT * FROM tickets WHERE id = " + newestId;
+    db.query(sqlSelect, (err, result) => {
+        newestIssue = result.id
+        console.log(newestIssue);
+    })
+
+}
 
 app.listen(3001, function (err) {
     if (err) {
