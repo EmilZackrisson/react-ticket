@@ -183,7 +183,7 @@ function App() {
   return (
     <>
 
-      <Alert key="warning" variant="warning">
+      <Alert key="warning" variant="warning" className="m-1">
         Denna applikation är fortfarande inte färdig, så den kanske inte fungerar fullt som den ska.
       </Alert>
 
@@ -250,10 +250,11 @@ function App() {
       {issuesList.map((val) => {
         // console.log(val);
 
+        // Sätter klasser och specifik färg beroende på om den är klar.
         var issueCardClasses = classNames(
           {
-            "border-success": Boolean(val.complete),
-            "border-warning": !Boolean(val.complete)
+            "border-success": Boolean(val.complete), // Kant grön
+            "border-warning": !Boolean(val.complete) // Kant röd
           },
           "mb-3",
           "container-xl"
@@ -263,11 +264,9 @@ function App() {
         return (
           // Issues cards are placed here
           <div id="issuesCards">
-
             <Card className={issueCardClasses}>
-              {/* <Card.Header>{val.id}</Card.Header> */}
               <Card.Body>
-                <Card.Title>#{val.id}</Card.Title>
+                <Card.Title>#{val.id} | {val.senderName} <a href={"mailto:" + val.senderEmail}>{val.senderEmail}</a></Card.Title>
                 <Card.Text>
                   {val.issue}
                 </Card.Text>
@@ -290,18 +289,13 @@ function App() {
                     />
                   </FormGroup>
                   <Button type="submit">Uppdatera</Button>
-                  <Button type="button" className="btn-danger" onClick={
-                    e => deleteIssue(val.id)
-                  }>Ta bort</Button>
-
+                  <Button type="button" className="btn-danger m-2" onClick={e => deleteIssue(val.id)}>Ta bort</Button>
                 </Form>
               </Card.Body>
             </Card>
-
           </div>
         )
       })}
-
     </>
   );
 }
