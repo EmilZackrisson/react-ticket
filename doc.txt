@@ -1,0 +1,2 @@
+client sänder ut rätt data, servern läser undefined =>
+    TypeError: Cannot read properties of undefined (reading 'senderName')

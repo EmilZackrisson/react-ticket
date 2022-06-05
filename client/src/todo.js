@@ -4,9 +4,11 @@ function todo() {
     return (
         <div>
             {/* <h3>Lägg till delete, id undefined</h3> */}
-            <h3>Fixa Styling</h3>
-            <h3>Fixa mail</h3>
-            <h3>fixa discord</h3>
+            <h1>Todo</h1>
+            <h5>klar status visa</h5>
+            <h5>Fixa Styling</h5>
+            <h5>Fixa mail</h5>
+            <h5>fixa discord</h5>
         </div>
     );
 }

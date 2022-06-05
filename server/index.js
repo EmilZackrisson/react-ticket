@@ -4,7 +4,7 @@ const cors = require("cors");
 const mysql = require("mysql");
 const discord = require("./discord.js");
 const higestId = require("./highestId.js")
-// const bodyParser = require("body-parser");
+const bodyParser = require("body-parser");
 
 // if(process.env.MYSQL_HOST != ""){
 //     const host = process.env.MYSQL_HOST;
@@ -34,6 +34,12 @@ const db = mysql.createPool({
 // app.use(bodyParser.urlencoded({extended: true}))
 app.use(cors());
 
+// parse application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ extended: false }))
+
+// parse application/json
+app.use(bodyParser.json())
+
 // discord.send("Hej", "Emil", 51);
 
 
@@ -47,17 +53,36 @@ app.get("/api/get", (req, res) => {
     })
 })
 
+app.get("/api/test/id", (req, res) => {
+    notifyNewIssue();
+    res.send("hello")
+})
+
 app.post('/api/insert', (req, res) => {
 
     const senderName = req.body.senderName;
-    const issue = req.body.issue;
-    const complete = req.body.complete;
+    var issue = String(req.body.issue);
+    // const complete = req.body.complete;
+    const complete = 0;
     const email = req.body.senderEmail;
 
-    if(senderName == "" | issue == "" | email == ""){
+    console.log(req.body);
+
+    if (senderName == "" | issue == "" | email == "") {
         res.sendStatus(406).send("Not Acceptable");
         return;
     }
+
+    // if(issue.indexOf("?") != -1){
+
+
+    //     const pos = issue.indexOf("?");
+    //     const a = issue.slice(0 ,pos);
+    //     const b = issue.slice(pos, issue.length);
+    //     issue = a + "#" + b;
+
+
+    // }
 
     const sqlInsert = "INSERT INTO tickets (senderName, issue, complete, senderEmail) VALUES ('" + senderName + "', '" + issue + "', '" + complete + "', '" + email + "' );"
     db.query(
@@ -65,11 +90,14 @@ app.post('/api/insert', (req, res) => {
         [senderName, issue, complete, email],
         (err, result) => {
             if (err) {
+                console.log(sqlInsert)
                 console.log(err);
+
                 res.sendStatus(500);
+                // res.send("error från server");
             }
             else {
-                
+
                 res.sendStatus(200);
                 notifyNewIssue();
             }
@@ -78,11 +106,11 @@ app.post('/api/insert', (req, res) => {
 
 //Update complete in mysql
 app.post('/api/patch/complete', (req, res) => {
-    
+
     const id = req.body.id;
     const complete = req.body.complete;
 
-    if(!id){
+    if (!id) {
         res.sendStatus(500);
         res.send("no id")
     }
@@ -98,13 +126,14 @@ app.post('/api/patch/complete', (req, res) => {
         }
         else {
             res.send("Update completed succesful");
+            notifySolvedIssue(id, complete);
         }
     })
 })
 
 //Update issue
 app.patch('/api/patch/issue', (req, res) => {
-    
+
     const id = req.body.id;
     const issue = req.body.issue;
 
@@ -124,10 +153,10 @@ app.patch('/api/patch/issue', (req, res) => {
 })
 
 app.post("/api/delete/issue", (req, res) => {
-    
+
     const id = req.body.id;
     console.log(req.body);
-    
+
     // res.sendStatus(500);
 
     const sqlDelete = "DELETE FROM tickets WHERE id = " + id + ";";
@@ -149,18 +178,65 @@ app.post("/api/post/test", (req, res) => {
     res.send(body);
 })
 
-function notifyNewIssue(json){
-    
-    let newestId = higestId.higest(json);
-    let newestIssue;
+function notifyNewIssue() {
+
+    // let newestId = higestId.higest(json);
+    // let newestIssue;
     // console.log(newestIssue)
     // discord.send("hej", "hej", 69)
 
-    const sqlSelect = "SELECT * FROM tickets WHERE id = " + newestId;
-    db.query(sqlSelect, (err, result) => {
-        newestIssue = result.id
-        console.log(newestIssue);
+    // const sqlSelect = "SELECT * FROM tickets WHERE id = " + newestId;
+    // db.query(sqlSelect, (err, result) => {
+    //     newestIssue = result.id
+    //     console.log(1);
+    // })
+    const sqlSelectHigestId = "SELECT * FROM tickets WHERE id = ( SELECT MAX(id) FROM tickets );"
+    db.query(sqlSelectHigestId, (err, result) => {
+
+        const newestIssue = result[0];
+        // console.log(newestIssue.id);
+        const newestId = newestIssue.id;
+        console.log("Newest id: ", newestId)
+
+        discord.send(newestIssue.issue, newestIssue.senderName, newestIssue.id)
     })
+}
+
+function notifySolvedIssue(id, complete) {
+
+    // let newestId = higestId.higest(json);
+    // let newestIssue;
+    // console.log(newestIssue)
+    // discord.send("hej", "hej", 69)
+
+    // const sqlSelect = "SELECT * FROM tickets WHERE id = " + newestId;
+    // db.query(sqlSelect, (err, result) => {
+    //     newestIssue = result.id
+    //     console.log(1);
+    // })
+    if (complete === 1) {
+        const sqlSelectHigestId = "SELECT * FROM tickets WHERE id = " + id + ";"
+        db.query(sqlSelectHigestId, (err, result) => {
+
+            const solvedIssue = result[0];
+            // console.log(newestIssue.id);
+            // console.log("Newest id: ", newestId)
+
+            discord.sendCompleted(solvedIssue.issue, solvedIssue.senderName, id)
+        })
+    }
+    if (complete === 0){
+        const sqlSelectHigestId = "SELECT * FROM tickets WHERE id = " + id + ";"
+        db.query(sqlSelectHigestId, (err, result) => {
+
+            const solvedIssue = result[0];
+            // console.log(newestIssue.id);
+            // console.log("Newest id: ", newestId)
+
+            discord.sendNotCompleted(solvedIssue.issue, solvedIssue.senderName, id)
+        })
+    }
+
 
 }
 
