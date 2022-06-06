@@ -3,3 +3,4 @@ server/node_modules
 client/package-lock.json
 react-ticket-client.tar
 react-ticket-server.tar
+server/.env

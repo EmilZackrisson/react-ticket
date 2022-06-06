@@ -3,29 +3,20 @@ const app = express();
 const cors = require("cors");
 const mysql = require("mysql");
 const discord = require("./discord.js");
+const email = require("./email.js");
 const higestId = require("./highestId.js")
 const bodyParser = require("body-parser");
 
-// if(process.env.MYSQL_HOST != ""){
-//     const host = process.env.MYSQL_HOST;
-//     const port = process.env.MYSQL_PORT;
-//     const user = process.env.MYSQL_USER;
-//     const pass = process.env.MYSQL_PASS;
-//     const database = process.env.MYSQL_DATABASE;
-// } else{
-//     const mySqlost = "192.168.1.20";
-//     const port = "3307";
-//     const user = "react-ticket";
-//     const pass = "react-ticket";
-//     const database = "react-ticket";
-// }
+require('dotenv').config()
+// console.log(process.env) // remove this after you've confirmed it working
+
 
 const db = mysql.createPool({
-    host: "192.168.1.20",
-    port: "3307",
-    user: "react-ticket",
-    password: "react-ticket",
-    database: "react-ticket"
+    host: process.env.DB_HOST,
+    port: process.env.DB_PORT,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASS,
+    database: process.env.DB_DATABASE
 })
 
 
@@ -33,6 +24,9 @@ const db = mysql.createPool({
 // app.use(express.urlencoded({ extended: true }));
 // app.use(bodyParser.urlencoded({extended: true}))
 app.use(cors());
+// app.use(cors({
+//     origin: ['http://localhost:3000', 'https://ticket.emilzackrisson.tk', 'http://192.168.1.69:3000']
+// }));
 
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }))
@@ -40,16 +34,14 @@ app.use(bodyParser.urlencoded({ extended: false }))
 // parse application/json
 app.use(bodyParser.json())
 
-// discord.send("Hej", "Emil", 51);
-
-
-
 app.get("/api/get", (req, res) => {
+    // console.log("got get req", req)
     const sqlSelect = "SELECT * FROM tickets";
     db.query(sqlSelect, (err, result) => {
         res.send(result);
-        // console.log(result)
-        // notifyNewIssue(result);
+        if (err) {
+            console.log(err);
+        }
     })
 })
 
@@ -72,17 +64,6 @@ app.post('/api/insert', (req, res) => {
         res.sendStatus(406).send("Not Acceptable");
         return;
     }
-
-    // if(issue.indexOf("?") != -1){
-
-
-    //     const pos = issue.indexOf("?");
-    //     const a = issue.slice(0 ,pos);
-    //     const b = issue.slice(pos, issue.length);
-    //     issue = a + "#" + b;
-
-
-    // }
 
     const sqlInsert = "INSERT INTO tickets (senderName, issue, complete, senderEmail) VALUES ('" + senderName + "', '" + issue + "', '" + complete + "', '" + email + "' );"
     db.query(
@@ -172,24 +153,21 @@ app.post("/api/delete/issue", (req, res) => {
     })
 })
 
-app.post("/api/post/test", (req, res) => {
+app.get("/api/test/email", (req, res) => {
     const body = req.body;
 
-    res.send(body);
+    console.log("test hej")
+
+    
+
+    res.send("hej");
+
+    
+    
 })
 
 function notifyNewIssue() {
 
-    // let newestId = higestId.higest(json);
-    // let newestIssue;
-    // console.log(newestIssue)
-    // discord.send("hej", "hej", 69)
-
-    // const sqlSelect = "SELECT * FROM tickets WHERE id = " + newestId;
-    // db.query(sqlSelect, (err, result) => {
-    //     newestIssue = result.id
-    //     console.log(1);
-    // })
     const sqlSelectHigestId = "SELECT * FROM tickets WHERE id = ( SELECT MAX(id) FROM tickets );"
     db.query(sqlSelectHigestId, (err, result) => {
 
@@ -198,22 +176,14 @@ function notifyNewIssue() {
         const newestId = newestIssue.id;
         console.log("Newest id: ", newestId)
 
+        email.sendNewIssue(newestIssue);
         discord.send(newestIssue.issue, newestIssue.senderName, newestIssue.id)
     })
 }
 
 function notifySolvedIssue(id, complete) {
 
-    // let newestId = higestId.higest(json);
-    // let newestIssue;
-    // console.log(newestIssue)
-    // discord.send("hej", "hej", 69)
 
-    // const sqlSelect = "SELECT * FROM tickets WHERE id = " + newestId;
-    // db.query(sqlSelect, (err, result) => {
-    //     newestIssue = result.id
-    //     console.log(1);
-    // })
     if (complete === 1) {
         const sqlSelectHigestId = "SELECT * FROM tickets WHERE id = " + id + ";"
         db.query(sqlSelectHigestId, (err, result) => {
@@ -225,7 +195,7 @@ function notifySolvedIssue(id, complete) {
             discord.sendCompleted(solvedIssue.issue, solvedIssue.senderName, id)
         })
     }
-    if (complete === 0){
+    if (complete === 0) {
         const sqlSelectHigestId = "SELECT * FROM tickets WHERE id = " + id + ";"
         db.query(sqlSelectHigestId, (err, result) => {
 

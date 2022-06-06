@@ -1,5 +1,7 @@
 const { Webhook, MessageBuilder } = require('discord-webhook-node');
-const hook = new Webhook("https://discord.com/api/webhooks/981989958669717564/ch_vTU2Rq445EiBIhAXmZ_kPRDVBLWA_OKTQyteR67w103seZYqDaFW2T7pROa7agXaW");
+require('dotenv').config()
+
+const hook = new Webhook(process.env.DISCORD_WEBHOOK);
 
 
 function send(message, sender, id) {

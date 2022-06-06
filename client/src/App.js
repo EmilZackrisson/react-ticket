@@ -4,36 +4,31 @@ import "./App.css";
 import Axios from "axios";
 import { Button, Alert, Card, Form, FormGroup, InputGroup, Row } from 'react-bootstrap';
 import classNames from "classnames";
+import settings from "./settings.json"; // Set server url here
 
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
-
-  const [senderName, setSenderName] = useState('');
-  const [issue, setIssue] = useState('');
-  const [senderEmail, setSenderEmail] = useState('');
   const [issuesList, setIssuesList] = useState([]);
 
 
   const debug = true;
 
-  console.log("docker env: ", process.env.MYSQL_HOST);
 
 
   useEffect(() => {
-    console.log("Debug mode: ", debug);
-    Axios.get("http://localhost:3001/api/get").then((response) => {
-      if (debug) {
-        console.log(response.data)
-      }
+    Axios.get(settings.SERVER_URL+"/api/get").then((response) => {
+
       setIssuesList(response.data);
+    }).catch((error) => {
+      console.log(error);
     })
   }, [])
 
   const updateList = () => {
     console.log("updating list")
-    Axios.get("http://localhost:3001/api/get").then((response) => {
+    Axios.get(settings.SERVER_URL+"/api/get").then((response) => {
       if (debug) {
         console.log(response.data)
       }
@@ -48,7 +43,7 @@ function App() {
     }
 
     // console.log(id, completeStatus);
-    Axios.post("http://localhost:3001/api/patch/complete", {
+    Axios.post(settings.SERVER_URL+"/api/patch/complete", {
       complete: Number(completeStatus),
       id: id,
     }).then(() => {
@@ -63,27 +58,13 @@ function App() {
   // const handleSubmit = (event) =>
   const deleteIssue = (event) => {
     console.log(event);
-    Axios.post("http://localhost:3001/api/delete/issue", {
+    Axios.post(settings.SERVER_URL+"/api/delete/issue", {
       id: event,
     }).then(() => {
       // setIssuesList([...issuesList, { senderName: senderName, issue: issue, complete: complete }])
       updateList();
     });
   }
-
-  // function FormIssue() {
-  //   const [validated, setValidated] = useState(false);
-
-  //   const handleSubmit = (event) => {
-  //     const form = event.currentTarget;
-  //     if (form.checkValidity() === false) {
-  //       event.preventDefault();
-  //       event.stopPropagation();
-  //     }
-
-  //     setValidated(true);
-  //   }
-  // };
 
   const [validated, setValidated] = useState(false);
 
@@ -126,7 +107,7 @@ function App() {
 
   const submitIssue = () => {
     console.log("försöker skicka")
-    Axios.post("http://localhost:3001/api/insert", {
+    Axios.post(settings.SERVER_URL+"/api/insert", {
       senderName: formData.name,
       issue: formData.issue,
       senderEmail: formData.email,
@@ -148,7 +129,7 @@ function App() {
 
   function submitUpdate() {
     console.log("update sent");
-    Axios.patch("http://localhost:3001/api/patch/issue", {
+    Axios.patch(settings.SERVER_URL+"/api/patch/issue", {
       issue: issueUpdate.issue,
       id: issueUpdate.id,
     }).then(() => {
@@ -157,28 +138,6 @@ function App() {
     });
   }
 
-  // function testSend() {
-
-  //   // console.log(formData);
-
-  //   Axios.post("http://localhost:3001/api/insert", {
-  //     senderName: "test",
-  //     issue: "formData.issue?",
-  //     senderEmail: "formData.email",
-  //     complete: 1,
-  //   }).then(() => {
-  //     setIssuesList([...issuesList, { senderName: senderName, senderEmail: senderEmail, issue: issue, complete: 0 }]);
-  //     setTimeout(50);
-  //     updateList();
-
-  //   }).catch((error) => {
-  //     console.log(error.message);
-  //     if (error.message === "Request failed with status code 406") {
-  //       alert("Error 406. Testa att skicka igen.")
-  //     }
-  //   });
-  // };
-
 
   return (
     <>
@@ -186,6 +145,12 @@ function App() {
       <Alert key="warning" variant="warning" className="m-1">
         Denna applikation är fortfarande inte färdig, så den kanske inte fungerar fullt som den ska.
       </Alert>
+
+      <div className="jumbotron m-3">
+        <h1 className="display-4">Hej Världen!</h1>
+        <p className="lead">Det här är ett egenbyggt ticket system av Emil Zackrisson</p>
+        <hr className="my-4" /> 
+      </div>
 
       <Form noValidate validated={validated} onSubmit={handleSubmit} className="container-xl mb-5 border p-3 rounded">
         <Row className="mb-3">
@@ -200,6 +165,9 @@ function App() {
               }
             />
             <Form.Control.Feedback>Ser bra ut!</Form.Control.Feedback>
+            <Form.Control.Feedback type="invalid">
+                Du måste ange ditt namn.
+              </Form.Control.Feedback>
           </FormGroup>
           <Form.Group md="4" controlId="validationCustomUsername">
             <Form.Label>E-post</Form.Label>
@@ -239,6 +207,7 @@ function App() {
           </Form.Group>
         </Row>
         <Button type="submit">Skicka</Button>
+        {/* <Button onClick={updateList} className="m-2 btn-warning">test ladda lista</Button> */}
 
         {/* <Button onClick={testSend}>Testa</Button> */}
       </Form>
