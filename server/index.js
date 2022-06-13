@@ -4,7 +4,7 @@ const cors = require("cors");
 const mysql = require("mysql");
 const discord = require("./discord.js");
 const email = require("./email.js");
-const higestId = require("./highestId.js")
+// const higestId = require("./highestId.js")
 const bodyParser = require("body-parser");
 
 require('dotenv').config()
@@ -45,9 +45,25 @@ app.get("/api/get", (req, res) => {
     })
 })
 
-app.get("/api/test/id", (req, res) => {
-    notifyNewIssue();
-    res.send("hello")
+app.get("/api/test/listUsers", (req, res) => {
+    const sqlSelect = "SELECT * FROM users";
+    db.query(sqlSelect, (err, result) => {
+        res.send(result);
+        if (err) {
+            console.log(err);
+        }
+    })
+})
+
+app.post("/api/user", (req, res) => {
+    const email = req.body.email;
+    const sqlSelect = "SELECT hash FROM users WHERE email = '" + email + "' ;"
+    db.query(sqlSelect, (err, result) => {
+        res.send(result);
+        if (err) {
+            console.log(err);
+        }
+    })
 })
 
 app.post('/api/insert', (req, res) => {
@@ -57,6 +73,7 @@ app.post('/api/insert', (req, res) => {
     // const complete = req.body.complete;
     const complete = 0;
     const email = req.body.senderEmail;
+    const category = req.body.category;
 
     console.log(req.body);
 
@@ -65,10 +82,10 @@ app.post('/api/insert', (req, res) => {
         return;
     }
 
-    const sqlInsert = "INSERT INTO tickets (senderName, issue, complete, senderEmail) VALUES ('" + senderName + "', '" + issue + "', '" + complete + "', '" + email + "' );"
+    const sqlInsert = "INSERT INTO tickets (senderName, issue, complete, senderEmail, category) VALUES ('" + senderName + "', '" + issue + "', '" + complete + "', '" + email + "', '" + category + "' );"
     db.query(
         sqlInsert,
-        [senderName, issue, complete, email],
+        [senderName, issue, complete, email, category],
         (err, result) => {
             if (err) {
                 console.log(sqlInsert)
@@ -117,11 +134,14 @@ app.patch('/api/patch/issue', (req, res) => {
 
     const id = req.body.id;
     const issue = req.body.issue;
+    const category = req.body.category;
 
     console.log("ID: ", id, " issue: ", issue);
     console.log(req.body);
 
     const sqlInsert = "UPDATE tickets SET issue = '" + issue + "' WHERE id = '" + id + "';";
+    const sqlInsertCategory = "UPDATE tickets SET category = '" + category + "' WHERE id = '" + id + "';";
+
     db.query(sqlInsert, (err, result) => {
         if (err) {
             console.log(err);
@@ -129,6 +149,27 @@ app.patch('/api/patch/issue', (req, res) => {
         }
         else {
             res.send("Update issue succesful");
+        }
+    })
+})
+
+//Update category
+app.patch('/api/patch/category', (req, res) => {
+
+    const id = req.body.id;
+    const category = req.body.category;
+
+    console.log("got category update",req.body);
+
+    const sqlInsertCategory = "UPDATE tickets SET category = '" + category + "' WHERE id = '" + id + "';";
+
+    db.query(sqlInsertCategory, (err, result) => {
+        if (err) {
+            console.log(err);
+            res.sendStatus(500).send(err);
+        }
+        else {
+            res.send("Update category succesful");
         }
     })
 })
@@ -158,12 +199,12 @@ app.get("/api/test/email", (req, res) => {
 
     console.log("test hej")
 
-    
+
 
     res.send("hej");
 
-    
-    
+
+
 })
 
 function notifyNewIssue() {

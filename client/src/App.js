@@ -5,20 +5,35 @@ import Axios from "axios";
 import { Button, Alert, Card, Form, FormGroup, InputGroup, Row } from 'react-bootstrap';
 import classNames from "classnames";
 import settings from "./settings.json"; // Set server url here
+import bcrypt from 'bcryptjs'
+
 
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
   const [issuesList, setIssuesList] = useState([]);
+  const [hash, setHash] = useState([]);
+
 
 
   const debug = true;
+  const categoriesArray = ["Klicka för att välja kategori", "React Ticket", "Home Assistant", "Alice Home Assistant", "Alice Lägenhet", "Övrigt"];
+
+  const categories = categoriesArray.map((item) => {
+    return (
+      <option key={item} value={item}>
+        {item}
+      </option>
+    )
+  })
 
 
 
   useEffect(() => {
-    Axios.get(settings.SERVER_URL+"/api/get").then((response) => {
+    // addUser("Emil", "emil.zackrisson@gmail.com", "hej hej")
+    // checkUser("emil.zackrisson@gmail.com", "hej hej")
+    Axios.get(settings.SERVER_URL + "/api/get").then((response) => {
 
       setIssuesList(response.data);
     }).catch((error) => {
@@ -28,7 +43,7 @@ function App() {
 
   const updateList = () => {
     console.log("updating list")
-    Axios.get(settings.SERVER_URL+"/api/get").then((response) => {
+    Axios.get(settings.SERVER_URL + "/api/get").then((response) => {
       if (debug) {
         console.log(response.data)
       }
@@ -43,7 +58,7 @@ function App() {
     }
 
     // console.log(id, completeStatus);
-    Axios.post(settings.SERVER_URL+"/api/patch/complete", {
+    Axios.post(settings.SERVER_URL + "/api/patch/complete", {
       complete: Number(completeStatus),
       id: id,
     }).then(() => {
@@ -55,10 +70,28 @@ function App() {
     });
   }
 
+  function updateCategory(id, category) {
+
+    console.log(id, category)
+
+
+    // console.log(id, category);
+    Axios.patch(settings.SERVER_URL + "/api/patch/category", {
+      category: String(category),
+      id: id,
+    }).then(() => {
+      // setIssuesList([...issuesList, { senderName: senderName, issue: issue, complete: complete }])
+      updateList();
+      if (debug) {
+        console.log("update category ran")
+      }
+    });
+  }
+
   // const handleSubmit = (event) =>
   const deleteIssue = (event) => {
     console.log(event);
-    Axios.post(settings.SERVER_URL+"/api/delete/issue", {
+    Axios.post(settings.SERVER_URL + "/api/delete/issue", {
       id: event,
     }).then(() => {
       // setIssuesList([...issuesList, { senderName: senderName, issue: issue, complete: complete }])
@@ -71,12 +104,14 @@ function App() {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
-    issue: ""
+    issue: "",
+    category: ""
   })
 
   const [issueUpdate, setIssueUpdate] = useState({
     issue: "",
-    id: ""
+    id: "",
+    category: ""
   })
 
   const handleSubmit = (event) => {
@@ -107,11 +142,12 @@ function App() {
 
   const submitIssue = () => {
     console.log("försöker skicka")
-    Axios.post(settings.SERVER_URL+"/api/insert", {
+    Axios.post(settings.SERVER_URL + "/api/insert", {
       senderName: formData.name,
       issue: formData.issue,
       senderEmail: formData.email,
       complete: 0,
+      category: formData.category,
     }).then(() => {
       console.log("skickat")
       //   setIssuesList([...issuesList, { senderName: senderName, senderEmail: senderEmail, issue: issue, complete: 0 }]);
@@ -127,10 +163,23 @@ function App() {
     });
   };
 
+
   function submitUpdate() {
     console.log("update sent");
-    Axios.patch(settings.SERVER_URL+"/api/patch/issue", {
+    Axios.patch(settings.SERVER_URL + "/api/patch/issue", {
       issue: issueUpdate.issue,
+      id: issueUpdate.id,
+      category: issueUpdate.category,
+    }).then(() => {
+      // setIssuesList([...issuesList, { senderName: senderName, issue: issue, complete: complete }])
+      updateList();
+    });
+  }
+
+  function submitUpdateCategory(list) {
+    console.log("update sent");
+    Axios.patch(settings.SERVER_URL + "/api/patch/category", {
+      category: issueUpdate.category,
       id: issueUpdate.id,
     }).then(() => {
       // setIssuesList([...issuesList, { senderName: senderName, issue: issue, complete: complete }])
@@ -139,8 +188,12 @@ function App() {
   }
 
 
+
+
   return (
     <>
+
+
 
       <Alert key="warning" variant="warning" className="m-1">
         Denna applikation är fortfarande inte färdig, så den kanske inte fungerar fullt som den ska.
@@ -149,7 +202,7 @@ function App() {
       <div className="jumbotron m-3">
         <h1 className="display-4">Hej Världen!</h1>
         <p className="lead">Det här är ett egenbyggt ticket system av Emil Zackrisson</p>
-        <hr className="my-4" /> 
+        <hr className="my-4" />
       </div>
 
       <Form noValidate validated={validated} onSubmit={handleSubmit} className="container-xl mb-5 border p-3 rounded">
@@ -166,8 +219,8 @@ function App() {
             />
             <Form.Control.Feedback>Ser bra ut!</Form.Control.Feedback>
             <Form.Control.Feedback type="invalid">
-                Du måste ange ditt namn.
-              </Form.Control.Feedback>
+              Du måste ange ditt namn.
+            </Form.Control.Feedback>
           </FormGroup>
           <Form.Group md="4" controlId="validationCustomUsername">
             <Form.Label>E-post</Form.Label>
@@ -205,6 +258,15 @@ function App() {
               Vad är ditt problem?
             </Form.Control.Feedback>
           </Form.Group>
+          <Form.Group>
+            <Form.Label>Kategori</Form.Label>
+            <Form.Select aria-label="Kategori" onChange={
+              e => setFormData({ ...formData, category: e.target.value })
+            }>
+              {categories}
+            </Form.Select>
+          </Form.Group>
+          {/* {console.log(formData.category)} */}
         </Row>
         <Button type="submit">Skicka</Button>
         {/* <Button onClick={updateList} className="m-2 btn-warning">test ladda lista</Button> */}
@@ -229,13 +291,15 @@ function App() {
           "container-xl"
         )
 
+        // var issue = val.issue;
+
 
         return (
           // Issues cards are placed here
-          <div id="issuesCards">
+          <div id="issuesCards" key={val.id}>
             <Card className={issueCardClasses}>
               <Card.Body>
-                <Card.Title>#{val.id} | {val.senderName} <a href={"mailto:" + val.senderEmail}>{val.senderEmail}</a></Card.Title>
+                <Card.Title>#{val.id} | {val.senderName} <a href={"mailto:" + val.senderEmail}>{val.senderEmail}</a> | {val.category}</Card.Title>
                 <Card.Text>
                   {val.issue}
                 </Card.Text>
@@ -243,12 +307,12 @@ function App() {
                   <FormGroup controlId="validationUpdate">
                     <Form.Label>Uppdatera problem</Form.Label>
                     <Form.Control
-                      required
                       type="text"
                       placeholder="Problem"
                       onChange={
                         e => setIssueUpdate({ ...issueUpdate, issue: e.target.value, id: val.id })
                       }
+                      defaultValue={val.issue}
                     />
                     <Form.Check type="checkbox" label="Markera som klar"
                       checked={val.complete}
@@ -257,6 +321,16 @@ function App() {
                       }
                     />
                   </FormGroup>
+                  <Form.Group>
+                    <Form.Label>Kategori</Form.Label>
+                    <Form.Select aria-label="Kategori" onChange={
+                      e => updateCategory(val.id, e.target.value)
+                    }
+                      defaultValue={val.category}
+                    >
+                      {categories}
+                    </Form.Select>
+                  </Form.Group>
                   <Button type="submit">Uppdatera</Button>
                   <Button type="button" className="btn-danger m-2" onClick={e => deleteIssue(val.id)}>Ta bort</Button>
                 </Form>
