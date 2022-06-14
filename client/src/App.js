@@ -31,8 +31,6 @@ function App() {
 
 
   useEffect(() => {
-    // addUser("Emil", "emil.zackrisson@gmail.com", "hej hej")
-    // checkUser("emil.zackrisson@gmail.com", "hej hej")
     Axios.get(settings.SERVER_URL + "/api/get").then((response) => {
 
       setIssuesList(response.data);
