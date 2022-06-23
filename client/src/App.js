@@ -2,10 +2,9 @@ import React, { useEffect, useState } from "react";
 // import { useForm } from 'react-hook-form';
 import "./App.css";
 import Axios from "axios";
-import { Button, Alert, Card, Form, FormGroup, InputGroup, Row } from 'react-bootstrap';
+import { Button, Alert, Card, Form, FormGroup, InputGroup, Row, Navbar, Container } from 'react-bootstrap';
 import classNames from "classnames";
 import settings from "./settings.json"; // Set server url here
-import bcrypt from 'bcryptjs'
 
 
 
@@ -13,7 +12,16 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
   const [issuesList, setIssuesList] = useState([]);
-  const [hash, setHash] = useState([]);
+
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [loggedIn, setLoggedIn] = useState(Boolean);
+  const [navButtonLink, setNavButtonLink] = useState("");
+  const [navButtonText, setNavButtonText] = useState("");
+  const [navUserState, setNavUserState] = useState("");
+  const [navHello, setNavHello] = useState("");
+
+  
 
 
 
@@ -31,8 +39,28 @@ function App() {
 
 
   useEffect(() => {
-    // addUser("Emil", "emil.zackrisson@gmail.com", "hej hej")
-    // checkUser("emil.zackrisson@gmail.com", "hej hej")
+    const loggedIn = localStorage.getItem("user");
+    if (loggedIn) {
+      const loggedInUser = JSON.parse(loggedIn);
+      // setUser(foundUser);
+      console.log(loggedInUser)
+
+
+      setUsername(loggedInUser.name);
+      setEmail(loggedInUser.email);
+      setLoggedIn(true);
+
+
+      setNavButtonLink("/logout");
+      setNavButtonText("Logga ut");
+      setNavHello('Hej ' + {username} + "!")
+    }
+    if(!loggedIn){
+      setNavButtonLink("/login");
+      setNavButtonText("Logga in");
+      setNavHello("Hej Världen!");
+    }
+
     Axios.get(settings.SERVER_URL + "/api/get").then((response) => {
 
       setIssuesList(response.data);
@@ -40,6 +68,7 @@ function App() {
       console.log(error);
     })
   }, [])
+
 
   const updateList = () => {
     console.log("updating list")
@@ -187,20 +216,33 @@ function App() {
     });
   }
 
-
+  var testArray = {};
 
 
   return (
     <>
 
-
-
-      <Alert key="warning" variant="warning" className="m-1">
+<Alert key="warning" variant="warning" className="m-1">
         Denna applikation är fortfarande inte färdig, så den kanske inte fungerar fullt som den ska.
       </Alert>
 
+      <Navbar>
+        <Container>
+          <Navbar.Brand href="/">React Ticket</Navbar.Brand>
+          <Navbar.Toggle />
+          <Navbar.Collapse className="justify-content-end">
+            <Navbar.Text>
+              {navUserState}
+              <Button variant="primary" href={navButtonLink}>{navButtonText}</Button>
+            </Navbar.Text>
+          </Navbar.Collapse>
+        </Container>
+      </Navbar>
+
+      
+
       <div className="jumbotron m-3">
-        <h1 className="display-4">Hej Världen!</h1>
+        <h1 className="display-4">{navHello}</h1>
         <p className="lead">Det här är ett egenbyggt ticket system av Emil Zackrisson</p>
         <hr className="my-4" />
       </div>
@@ -213,6 +255,8 @@ function App() {
               required
               type="text"
               placeholder="Namn"
+              defaultValue={username}
+              readOnly={loggedIn}
               onChange={
                 e => setFormData({ ...formData, name: e.target.value })
               }
@@ -230,6 +274,8 @@ function App() {
                 type="email"
                 placeholder="E-post"
                 aria-describedby="inputGroupPrepend"
+                defaultValue={email}
+                readOnly={loggedIn}
                 required
                 onChange={
                   e => setFormData({ ...formData, email: e.target.value })

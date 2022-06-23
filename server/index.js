@@ -56,12 +56,15 @@ app.get("/api/test/listUsers", (req, res) => {
 })
 
 app.post("/api/user", (req, res) => {
+    // console.log("hej");
     const email = req.body.email;
-    const sqlSelect = "SELECT hash FROM users WHERE email = '" + email + "' ;"
+    const sqlSelect = "SELECT * FROM users WHERE email = '" + email + "' ;"
     db.query(sqlSelect, (err, result) => {
+        // console.log(result);
         res.send(result);
         if (err) {
             console.log(err);
+            // console.log(result);
         }
     })
 })

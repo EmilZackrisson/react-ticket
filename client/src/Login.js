@@ -6,13 +6,13 @@ import classNames from "classnames";
 import settings from "./settings.json"; // Set server url here
 import bcrypt from 'bcryptjs'
 import reactCookie from 'react-cookie';
+import {  } from "react-router-dom";
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 function Login() {
 
     const [validated, setValidated] = useState(false);
-    // const [hash, setHash] = useState("");
 
 
 
@@ -31,7 +31,8 @@ function Login() {
         }
 
         setValidated(true);
-        submitIssue();
+        // submitIssue();
+        checkUser();
     };
 
     const submitIssue = () => {
@@ -39,10 +40,10 @@ function Login() {
         checkUser();
     };
 
-    function addUser(name, email, password) {
+    function addUser(email, password) {
         bcrypt.genSalt(10, function (err, salt) {
             bcrypt.hash(password, salt, function (err, hash) {
-                console.log("name:", name, " email: ", email, " hash: ", hash);
+                console.log("email: ", email, " hash: ", hash);
                 // Store hash in your password DB.
 
             });
@@ -52,9 +53,12 @@ function Login() {
     function checkUser() {
 
 
+
         // var res = "";
         // const populateData = (data) => { setHash(data) }
         // console.log(response.data[0].hash)
+
+        // addUser(formData.email, formData.password);
 
         var email = formData.email;
         var password = formData.password;
@@ -63,7 +67,7 @@ function Login() {
         Axios.post(settings.SERVER_URL + "/api/user", {
             email: email,
         }).then(function (response) {
-            // console.log(response.data[0].hash);
+            console.log(response.data);
             const hash = response.data[0].hash;
 
             bcrypt.compare(password, hash).then((res) => {
@@ -71,13 +75,13 @@ function Login() {
                 console.log("password ", res);
                 alert(res);
 
-                var today = new Date();
-                var tomorrow = new Date();
-                tomorrow.setDate(today.getDate() + 1);
-
-                reactCookie.save(email, "logged-in", {
-                    expires: tomorrow // Will expire after 24hr from setting (value is in Date object)
-                });
+                if(res == true){
+                    // const user = response.data[0];
+                    // console.log(user);
+                    delete response.data[0].hash;
+                    localStorage.setItem('user', JSON.stringify(response.data[0]))
+                    window.location.replace("/");
+                }
             });
 
         })
@@ -132,7 +136,7 @@ function Login() {
                         </InputGroup>
                     </Form.Group>
                 </Row>
-                <Button type="submit">Skicka</Button>
+                <Button type="button" onClick={checkUser}>Skicka</Button>
                 {/* <Button onClick={updateList} className="m-2 btn-warning">test ladda lista</Button> */}
 
                 {/* <Button onClick={testSend}>Testa</Button> */}
