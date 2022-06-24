@@ -15,7 +15,7 @@ function send(message, sender, id) {
     const embed = new MessageBuilder()
         .setTitle(title)
         .setAuthor(sender)
-        .setURL('http://localhost:3000/')
+        .setURL(process.env.REACT_TICKET_URL)
         .addField(field, message) //Problem
         // .addField('Second field', 'this is not inline')
         .setColor('#ff0000')
@@ -39,12 +39,12 @@ function sendCompleted(message, sender, id) {
     const embed = new MessageBuilder()
         .setTitle(title)
         .setAuthor(sender)
-        .setURL('http://localhost:3000/')
+        .setURL(process.env.REACT_TICKET_URL)
         .addField(field, message) //Problem
         // .addField('Second field', 'this is not inline')
         .setColor('#00FF00')
         // .setThumbnail('https://cdn.discordapp.com/embed/avatars/0.png')
-        .setDescription('Problemet rapporterat som klar')
+        .setDescription('Problemet rapporterat som klart')
         // .setImage('https://cdn.discordapp.com/embed/avatars/0.png')
         // .setFooter('Hey its a footer', 'https://cdn.discordapp.com/embed/avatars/0.png')
         .setTimestamp();
@@ -63,7 +63,7 @@ function sendNotCompleted(message, sender, id) {
     const embed = new MessageBuilder()
         .setTitle(title)
         .setAuthor(sender)
-        .setURL('http://localhost:3000/')
+        .setURL(process.env.REACT_TICKET_URL)
         .addField(field, message) //Problem
         // .addField('Second field', 'this is not inline')
         .setColor('#ffa500')

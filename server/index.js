@@ -62,6 +62,7 @@ app.post("/api/user", (req, res) => {
     db.query(sqlSelect, (err, result) => {
         // console.log(result);
         res.send(result);
+        console.log("got user on request: ", result);
         if (err) {
             console.log(err);
             // console.log(result);
@@ -98,7 +99,7 @@ app.post('/api/insert', (req, res) => {
                 // res.send("error från server");
             }
             else {
-
+                console.log("new issue reported and inserted")
                 res.sendStatus(200);
                 notifyNewIssue();
             }

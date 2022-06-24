@@ -21,6 +21,13 @@ function App() {
   const [navUserState, setNavUserState] = useState("");
   const [navHello, setNavHello] = useState("");
 
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    issue: "",
+    category: ""
+  });
+
   
 
 
@@ -36,15 +43,25 @@ function App() {
     )
   })
 
+  function returnUser(usernameOrEmail){
+    const loggedIn = localStorage.getItem("user");
+    if(usernameOrEmail == "username"){
+      return loggedIn.user;
+    }
+    if(usernameOrEmail == "email"){
+      return loggedIn.email;
+    }
+  }
+
 
 
   useEffect(() => {
-<<<<<<< HEAD
+
     const loggedIn = localStorage.getItem("user");
     if (loggedIn) {
       const loggedInUser = JSON.parse(loggedIn);
       // setUser(foundUser);
-      console.log(loggedInUser)
+      console.log("local storage: ",loggedInUser)
 
 
       setUsername(loggedInUser.name);
@@ -54,7 +71,17 @@ function App() {
 
       setNavButtonLink("/logout");
       setNavButtonText("Logga ut");
-      setNavHello('Hej ' + {username} + "!")
+      setNavHello('Hej ' + loggedInUser.name + "!");
+      setNavUserState("Inloggad som ", loggedInUser.name)
+
+      setFormData({ ...formData, name: loggedInUser.name, email: loggedInUser.email });
+
+      // For debug
+      console.log("Username:",loggedInUser.name); 
+      console.log("email: ", loggedInUser.email);
+      
+
+
     }
     if(!loggedIn){
       setNavButtonLink("/login");
@@ -62,8 +89,6 @@ function App() {
       setNavHello("Hej Världen!");
     }
 
-=======
->>>>>>> f0809be4818945a6f1ca15624ef97abaf75f36b7
     Axios.get(settings.SERVER_URL + "/api/get").then((response) => {
 
       setIssuesList(response.data);
@@ -133,13 +158,6 @@ function App() {
 
   const [validated, setValidated] = useState(false);
 
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    issue: "",
-    category: ""
-  })
-
   const [issueUpdate, setIssueUpdate] = useState({
     issue: "",
     id: "",
@@ -157,6 +175,8 @@ function App() {
 
     setValidated(true);
     submitIssue();
+    // testSubmit();
+
   };
 
   const handleUpdate = (event) => {
@@ -172,27 +192,32 @@ function App() {
     submitUpdate();
   };
 
+  const testSubmit = () => {
+    console.log("test submit formdata ",formData);
+  }
+
   const submitIssue = () => {
     console.log("försöker skicka")
-    Axios.post(settings.SERVER_URL + "/api/insert", {
-      senderName: formData.name,
-      issue: formData.issue,
-      senderEmail: formData.email,
-      complete: 0,
-      category: formData.category,
-    }).then(() => {
-      console.log("skickat")
-      //   setIssuesList([...issuesList, { senderName: senderName, senderEmail: senderEmail, issue: issue, complete: 0 }]);
-      //   setTimeout(50);
-      //   updateList();
-
-    }).catch((error) => {
-      console.log("det gick inte att skicka")
-      console.log(error.message);
-      if (error.message === "Request failed with status code 406") {
-        alert("Error 406. Testa att skicka igen.")
-      }
-    });
+    
+      Axios.post(settings.SERVER_URL + "/api/insert", {
+        senderName: formData.name,
+        issue: formData.issue,
+        senderEmail: formData.email,
+        complete: 0,
+        category: formData.category,
+      }).then(() => {
+        console.log("skickat")
+        //   setIssuesList([...issuesList, { senderName: senderName, senderEmail: senderEmail, issue: issue, complete: 0 }]);
+        //   setTimeout(50);
+        //   updateList();
+  
+      }).catch((error) => {
+        console.log("det gick inte att skicka")
+        console.log(error.message);
+        if (error.message === "Request failed with status code 406") {
+          alert("Error 406. Testa att skicka igen.")
+        }
+      });
   };
 
 
@@ -258,7 +283,8 @@ function App() {
               required
               type="text"
               placeholder="Namn"
-              defaultValue={username}
+              // defaultValue={username}
+              value={username}
               readOnly={loggedIn}
               onChange={
                 e => setFormData({ ...formData, name: e.target.value })
@@ -277,7 +303,8 @@ function App() {
                 type="email"
                 placeholder="E-post"
                 aria-describedby="inputGroupPrepend"
-                defaultValue={email}
+                // defaultValue={email}
+                value={email}
                 readOnly={loggedIn}
                 required
                 onChange={
