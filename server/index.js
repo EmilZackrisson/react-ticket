@@ -6,6 +6,9 @@ const discord = require("./discord.js");
 const email = require("./email.js");
 // const higestId = require("./highestId.js")
 const bodyParser = require("body-parser");
+const fs = require('fs');
+const https = require('https');
+const path = require('path');
 
 require('dotenv').config()
 // console.log(process.env) // remove this after you've confirmed it working
@@ -18,6 +21,11 @@ const db = mysql.createPool({
     password: process.env.DB_PASS,
     database: process.env.DB_DATABASE
 })
+
+const httpsOptions = {
+    cert: fs.readFileSync(path.join(__dirname, 'ssl', 'emilzackrisson.tk.crt')),
+    key: fs.readFileSync(path.join(__dirname, 'ssl', 'emilzackrisson.tk.key'))
+}
 
 
 // app.use(express.json());
@@ -263,5 +271,6 @@ app.listen(3001, function (err) {
     console.log('Server started on port 3001')
 })
 
-
-
+https.createServer(httpsOptions, app).listen(3443, function(){
+    console.log('Serving app at https://localhost:3443');
+})
