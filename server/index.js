@@ -42,6 +42,11 @@ app.use(bodyParser.urlencoded({ extended: false }))
 // parse application/json
 app.use(bodyParser.json())
 
+app.get("/api", (req, res) => {
+    // console.log("got get req", req)
+    res.send("Hej! Du hittade API:n för React Ticket.")
+})
+
 app.get("/api/get", (req, res) => {
     // console.log("got get req", req)
     const sqlSelect = "SELECT * FROM tickets";

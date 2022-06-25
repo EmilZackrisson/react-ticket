@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
-import Todo from './todo';
+// import Todo from './todo';
 import Settings from './Settings';
 import Login from './Login';
 import Logout from './Logout';

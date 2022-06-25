@@ -6,8 +6,6 @@ import { Button, Alert, Card, Form, FormGroup, InputGroup, Row, Navbar, Containe
 import classNames from "classnames";
 import settings from "./settings.json"; // Set server url here
 
-
-
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
@@ -28,7 +26,7 @@ function App() {
     category: ""
   });
 
-  
+
 
 
 
@@ -43,25 +41,13 @@ function App() {
     )
   })
 
-  function returnUser(usernameOrEmail){
-    const loggedIn = localStorage.getItem("user");
-    if(usernameOrEmail == "username"){
-      return loggedIn.user;
-    }
-    if(usernameOrEmail == "email"){
-      return loggedIn.email;
-    }
-  }
-
-
-
   useEffect(() => {
 
     const loggedIn = localStorage.getItem("user");
     if (loggedIn) {
       const loggedInUser = JSON.parse(loggedIn);
       // setUser(foundUser);
-      console.log("local storage: ",loggedInUser)
+      console.log("local storage: ", loggedInUser)
 
 
       setUsername(loggedInUser.name);
@@ -77,13 +63,13 @@ function App() {
       setFormData({ ...formData, name: loggedInUser.name, email: loggedInUser.email });
 
       // For debug
-      console.log("Username:",loggedInUser.name); 
+      console.log("Username:", loggedInUser.name);
       console.log("email: ", loggedInUser.email);
-      
+
 
 
     }
-    if(!loggedIn){
+    if (!loggedIn) {
       setNavButtonLink("/login");
       setNavButtonText("Logga in");
       setNavHello("Hej Världen!");
@@ -166,6 +152,7 @@ function App() {
 
   const handleSubmit = (event) => {
     const form = event.currentTarget;
+    event.preventDefault();
     if (form.checkValidity() === false) {
       console.log(formData);
       event.preventDefault();
@@ -181,6 +168,7 @@ function App() {
 
   const handleUpdate = (event) => {
     const form = event.currentTarget;
+    event.preventDefault();
     if (form.checkValidity() === false) {
       console.log(formData);
       event.preventDefault();
@@ -192,32 +180,29 @@ function App() {
     submitUpdate();
   };
 
-  const testSubmit = () => {
-    console.log("test submit formdata ",formData);
-  }
 
   const submitIssue = () => {
     console.log("försöker skicka")
-    
-      Axios.post(settings.SERVER_URL + "/api/insert", {
-        senderName: formData.name,
-        issue: formData.issue,
-        senderEmail: formData.email,
-        complete: 0,
-        category: formData.category,
-      }).then(() => {
-        console.log("skickat")
-        //   setIssuesList([...issuesList, { senderName: senderName, senderEmail: senderEmail, issue: issue, complete: 0 }]);
-        //   setTimeout(50);
-        //   updateList();
-  
-      }).catch((error) => {
-        console.log("det gick inte att skicka")
-        console.log(error.message);
-        if (error.message === "Request failed with status code 406") {
-          alert("Error 406. Testa att skicka igen.")
-        }
-      });
+
+    Axios.post(settings.SERVER_URL + "/api/insert", {
+      senderName: formData.name,
+      issue: formData.issue,
+      senderEmail: formData.email,
+      complete: 0,
+      category: formData.category,
+    }).then(() => {
+      console.log("skickat")
+      //   setIssuesList([...issuesList, { senderName: senderName, senderEmail: senderEmail, issue: issue, complete: 0 }]);
+      //   setTimeout(50);
+      //   updateList();
+
+    }).catch((error) => {
+      console.log("det gick inte att skicka")
+      console.log(error.message);
+      if (error.message === "Request failed with status code 406") {
+        alert("Error 406. Testa att skicka igen.")
+      }
+    });
   };
 
 
@@ -233,41 +218,40 @@ function App() {
     });
   }
 
-  function submitUpdateCategory(list) {
-    console.log("update sent");
-    Axios.patch(settings.SERVER_URL + "/api/patch/category", {
-      category: issueUpdate.category,
-      id: issueUpdate.id,
-    }).then(() => {
-      // setIssuesList([...issuesList, { senderName: senderName, issue: issue, complete: complete }])
-      updateList();
-    });
-  }
+  // function submitUpdateCategory(list) {
+  //   console.log("update sent");
+  //   Axios.patch(settings.SERVER_URL + "/api/patch/category", {
+  //     category: issueUpdate.category,
+  //     id: issueUpdate.id,
+  //   }).then(() => {
+  //     // setIssuesList([...issuesList, { senderName: senderName, issue: issue, complete: complete }])
+  //     updateList();
+  //   });
+  // }
 
-  var testArray = {};
 
 
   return (
     <>
 
-<Alert key="warning" variant="warning" className="m-1">
+      <Alert key="warning" variant="warning" className="m-1">
         Denna applikation är fortfarande inte färdig, så den kanske inte fungerar fullt som den ska.
       </Alert>
 
-      <Navbar>
-        <Container>
+      <Navbar className="container-fluid text-bg-dark p-3">
+        <Container className="container-fluid">
           <Navbar.Brand href="/">React Ticket</Navbar.Brand>
           <Navbar.Toggle />
           <Navbar.Collapse className="justify-content-end">
-            <Navbar.Text>
-              {navUserState}
-              <Button variant="primary" href={navButtonLink}>{navButtonText}</Button>
+            <Navbar.Text className="m-2">
+              {navUserState} {username}
             </Navbar.Text>
+            <Button variant="primary" href={navButtonLink}>{navButtonText}</Button>
           </Navbar.Collapse>
         </Container>
       </Navbar>
 
-      
+
 
       <div className="jumbotron m-3">
         <h1 className="display-4">{navHello}</h1>
