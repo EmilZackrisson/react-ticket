@@ -83,6 +83,26 @@ app.post("/api/user", (req, res) => {
     })
 })
 
+app.post("/api/user/add", (req, res) => {
+
+    // console.log("hej");
+    const name = req.body.name;
+    const email = req.body.email;
+    const hash = req.body.hash;
+    const permissionLevel = req.body.permissionLevel;
+
+    const sqlSelect = "INSERT INTO users (name, email, hash, permissionlevel) VALUES ('" + name + "', '" + email + "', '" + hash + "', '" + permissionLevel + "' );"
+    db.query(sqlSelect, (err, result) => {
+        // console.log(result);
+        res.send(result);
+        console.log("added user: ", result);
+        if (err) {
+            console.log(err);
+            // console.log(result);
+        }
+    })
+})
+
 app.post('/api/insert', (req, res) => {
 
     const senderName = req.body.senderName;

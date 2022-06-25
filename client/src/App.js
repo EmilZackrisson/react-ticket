@@ -91,6 +91,7 @@ function App() {
         console.log(response.data)
       }
       setIssuesList(response.data);
+      window.location.reload(false);
     })
   }
 
@@ -192,6 +193,7 @@ function App() {
       category: formData.category,
     }).then(() => {
       console.log("skickat")
+      window.location.reload(false);
       //   setIssuesList([...issuesList, { senderName: senderName, senderEmail: senderEmail, issue: issue, complete: 0 }]);
       //   setTimeout(50);
       //   updateList();
@@ -263,6 +265,7 @@ function App() {
         <Row className="mb-3">
           <FormGroup md="4" controlId="validationCustom01">
             <Form.Label>Namn</Form.Label>
+            
             <Form.Control
               required
               type="text"

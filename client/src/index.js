@@ -20,6 +20,5 @@ root.render(
             </Routes>
         </Router>
         {/* <Todo /> */}
-        <Settings />
     </>
 );

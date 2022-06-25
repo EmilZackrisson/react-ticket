@@ -12,7 +12,7 @@ import {
 } from "react-bootstrap";
 import settings from "./settings.json"; // Set server url here
 import bcrypt from "bcryptjs";
-import {} from "react-router-dom";
+// import {} from "react-router-dom";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 
@@ -43,15 +43,6 @@ function Login() {
     // submitIssue();
     checkUser();
   };
-
-  function addUser(email, password) {
-    bcrypt.genSalt(10, function(err, salt) {
-      bcrypt.hash(password, salt, function(err, hash) {
-        console.log("email: ", email, " hash: ", hash);
-        // Store hash in your password DB.
-      });
-    });
-  }
 
   function alreadyLoggedIn() {
     alert("Du är redan inloggad. Du kommer att skickas till startsidan.");
