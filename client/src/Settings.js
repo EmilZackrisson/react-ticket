@@ -9,6 +9,7 @@ import {
   Alert,
   Navbar,
   Container,
+  Nav
 } from "react-bootstrap";
 import settings from "./settings.json"; // Set server url here
 import bcrypt from "bcryptjs";
@@ -23,7 +24,6 @@ function Settings() {
   const [validated, setValidated] = useState(false);
   const [loggedIn, setLoggedIn] = useState(Boolean);
   const [permissionLevel, setPermissionLevel] = useState("");
-
 
   const handleSubmit = (event) => {
     const form = event.currentTarget;
@@ -50,16 +50,16 @@ function Settings() {
       setPermissionLevel(loggedInUser.permissionlevel);
 
       // For debug
-    //   console.log("Username:", loggedInUser.name);
-    //   console.log("email: ", loggedInUser.email);
-    //   console.log(
-    //     "logged in:",
-    //     loggedIn,
-    //     " permission level: ",
-    //     permissionLevel
-    //   );
+      //   console.log("Username:", loggedInUser.name);
+      //   console.log("email: ", loggedInUser.email);
+      //   console.log(
+      //     "logged in:",
+      //     loggedIn,
+      //     " permission level: ",
+      //     permissionLevel
+      //   );
 
-    //   console.log(formData);
+      //   console.log(formData);
     }
     if (!userStorage) {
       alert("Du är inte inloggad.");
@@ -100,9 +100,20 @@ function Settings() {
     });
   }
 
-  if ((loggedIn === true) && (permissionLevel === "3")) {
+  if (loggedIn === true && permissionLevel === "3") {
     return (
       <>
+        <Navbar bg="light" variant="light">
+          <Container>
+            <Navbar.Brand href="#home">React Ticke</Navbar.Brand>
+            <Nav className="me-auto">
+              <Nav.Link href="/">Hem</Nav.Link>
+              <Nav.Link href="/settings">Inställningar</Nav.Link>
+              {/* <Nav.Link href="#pricing">Pricing</Nav.Link> */}
+            </Nav>
+          </Container>
+        </Navbar>
+
         <Alert key="warning" variant="warning" className="m-1">
           Denna applikation är fortfarande inte färdig, så den kanske inte
           fungerar fullt som den ska.
@@ -243,14 +254,15 @@ function Settings() {
         </section>
       </>
     );
-  } if(permissionLevel !== "3"){
+  }
+  if (permissionLevel !== "3") {
     console.log(permissionLevel);
-    return(
-        <>
-            <h1>Error - Not Allowed</h1>
-            <p>You have not the permission to access the settings.</p>
-        </>
-    )
+    return (
+      <>
+        <h1>Error - Not Allowed</h1>
+        <p>You have not the permission to access the settings.</p>
+      </>
+    );
   }
 }
 
