@@ -17,3 +17,7 @@ Start the server by running `nodemon` in the server directory.
 #### Client
 Open the `settings.json` file in client/src and change the `SERVER_URL` to your servers url. The server runs on port 3001.
 Start the client by running `npm start` in the client directory.
+
+### TODO
+User List - /settings
+Add buttons for removing user.
