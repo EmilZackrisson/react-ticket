@@ -10,6 +10,7 @@ import {
   Navbar,
   Container,
   Nav,
+  Card,
 } from "react-bootstrap";
 import settings from "./settings.json"; // Set server url here
 import bcrypt from "bcryptjs";
@@ -119,7 +120,7 @@ function Settings() {
       <>
         <Navbar bg="light" variant="light">
           <Container>
-            <Navbar.Brand href="#home">React Ticke</Navbar.Brand>
+            <Navbar.Brand href="#home">React Ticket</Navbar.Brand>
             <Nav className="me-auto">
               <Nav.Link href="/">Hem</Nav.Link>
               <Nav.Link href="/settings">Inställningar</Nav.Link>
@@ -271,12 +272,21 @@ function Settings() {
           <section className="userList container border p-3 rounded my-3">
         <h4 className="display-6 m-3 ">Alla användare</h4>
           {userList.map((val) => {
+            if(val.permissionlevel === 1){
+              const permissionLevelText = "1 - Användare";
+            }
+            if(val.permissionlevel === 3){
+              const permissionLevelText = "3 - Admin";
+            }
+            
             return(
-              <div className="m-4">
-                <p>Username: {val.name}</p>
-                <p>Email: {val.email}</p>
-                <p>Permission level: {val.permissionlevel}</p>
-              </div>
+              <Card>
+                <Card.Body>
+                  <Card.Title>{val.name}</Card.Title>
+                  <Card.Text>E-post: {val.email}</Card.Text>
+                  <Card.Text>Permission Level: {val.permissionlevel}</Card.Text>
+                </Card.Body>
+              </Card>
             )
           })}
         </section>
