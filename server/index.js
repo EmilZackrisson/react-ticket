@@ -185,7 +185,9 @@ app.patch('/api/patch/issue', (req, res) => {
             res.sendStatus(500).send(err);
         }
         else {
+            notifyChangedIssue();
             res.send("Update issue succesful");
+            
         }
     })
 })
@@ -255,7 +257,7 @@ function notifyNewIssue() {
         console.log("Newest id: ", newestId)
 
         email.sendNewIssue(newestIssue);
-        discord.send(newestIssue.issue, newestIssue.senderName, newestIssue.id)
+        discord.sendNewIssue(newestIssue.issue, newestIssue.senderName, newestIssue.id)
     })
 }
 
@@ -271,6 +273,7 @@ function notifySolvedIssue(id, complete) {
             // console.log("Newest id: ", newestId)
 
             discord.sendCompleted(solvedIssue.issue, solvedIssue.senderName, id)
+            email.issueSolved(solvedIssue);
         })
     }
     if (complete === 0) {
@@ -286,6 +289,21 @@ function notifySolvedIssue(id, complete) {
     }
 
 
+}
+
+function notifyChangedIssue() {
+
+    const sqlSelectHigestId = "SELECT * FROM tickets WHERE id = ( SELECT MAX(id) FROM tickets );"
+    db.query(sqlSelectHigestId, (err, result) => {
+
+        const changedIssue = result[0];
+        // console.log(newestIssue.id);
+        // const newestId = changedIssue.id;
+        // console.log("Newest id: ", newestId)
+
+        email.issueChanged(changedIssue);
+        discord.sendChangedIssue(changedIssue.issue, changedIssue.senderName, changedIssue.id)
+    })
 }
 
 app.listen(3001, function (err) {
