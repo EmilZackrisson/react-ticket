@@ -119,7 +119,7 @@ function Settings() {
     return (
       <>
         <Navbar bg="light" variant="light">
-          <Container>
+          <Container fluid>
             <Navbar.Brand href="#home">React Ticket</Navbar.Brand>
             <Nav className="me-auto">
               <Nav.Link href="/">Hem</Nav.Link>
