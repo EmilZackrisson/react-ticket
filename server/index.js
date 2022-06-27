@@ -119,10 +119,12 @@ app.post('/api/insert', (req, res) => {
         return;
     }
 
-    const sqlInsert = "INSERT INTO tickets (senderName, issue, complete, senderEmail, category) VALUES ('" + senderName + "', '" + issue + "', '" + complete + "', '" + email + "', '" + category + "' );"
+    let values = [senderName, issue, complete, email, category];
+
+    const sqlInsert = "INSERT INTO tickets (senderName, issue, complete, senderEmail, category) VALUES(?);";
     db.query(
         sqlInsert,
-        [senderName, issue, complete, email, category],
+        [values],
         (err, result) => {
             if (err) {
                 console.log(sqlInsert)
@@ -138,6 +140,42 @@ app.post('/api/insert', (req, res) => {
             }
         })
 })
+
+// app.post('/api/insert', (req, res) => {
+
+//     const senderName = req.body.senderName;
+//     var issue = String(req.body.issue);
+//     // const complete = req.body.complete;
+//     const complete = 0;
+//     const email = req.body.senderEmail;
+//     const category = req.body.category;
+
+//     console.log(req.body);
+
+//     if (senderName == "" | issue == "" | email == "") {
+//         res.sendStatus(406).send("Not Acceptable");
+//         return;
+//     }
+
+//     const sqlInsert = "INSERT INTO tickets (senderName, issue, complete, senderEmail, category) VALUES ('" + senderName + "', '" + issue + "', '" + complete + "', '" + email + "', '" + category + "' );"
+//     db.query(
+//         sqlInsert,
+//         [senderName, issue, complete, email, category],
+//         (err, result) => {
+//             if (err) {
+//                 console.log(sqlInsert)
+//                 console.log(err);
+
+//                 res.sendStatus(500);
+//                 // res.send("error från server");
+//             }
+//             else {
+//                 console.log("new issue reported and inserted")
+//                 res.sendStatus(200);
+//                 notifyNewIssue();
+//             }
+//         })
+// })
 
 //Update complete in mysql
 app.post('/api/patch/complete', (req, res) => {
