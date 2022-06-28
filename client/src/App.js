@@ -81,6 +81,7 @@ function App() {
         email: loggedInUser.email,
       });
 
+
       // For debug
       console.log("Username:", loggedInUser.name);
       console.log("email: ", loggedInUser.email);
@@ -389,6 +390,9 @@ function App() {
           "container-xl"
         );
 
+        const time = new Date(val.timestamp).toLocaleString("sv-SE")
+        
+
         // var issue = val.issue;
 
         return (
@@ -399,7 +403,7 @@ function App() {
                 <Card.Title>
                   #{val.id} | {val.senderName}{" "}
                   <a href={"mailto:" + val.senderEmail}>{val.senderEmail}</a> |{" "}
-                  {val.category}
+                  {val.category} | {time}
                 </Card.Title>
                 <Card.Text>{val.issue}</Card.Text>
                 <Form onSubmit={handleUpdate}>

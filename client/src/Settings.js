@@ -27,6 +27,8 @@ function Settings() {
   const [permissionLevel, setPermissionLevel] = useState("");
   const [userList, setUserList] = useState([]);
 
+  const [loaded, setLoaded] = useState(false);
+
   const handleSubmit = (event) => {
     const form = event.currentTarget;
     event.preventDefault();
@@ -53,23 +55,13 @@ function Settings() {
 
       getAllUsers();
 
-      // For debug
-      //   console.log("Username:", loggedInUser.name);
-      //   console.log("email: ", loggedInUser.email);
-      //   console.log(
-      //     "logged in:",
-      //     loggedIn,
-      //     " permission level: ",
-      //     permissionLevel
-      //   );
-
-      //   console.log(formData);
+      
     }
     if (!userStorage) {
       alert("Du är inte inloggad.");
       window.location.replace("/login");
     }
-  });
+  }, []);
 
   function addUser() {
     bcrypt.genSalt(10, function(err, salt) {
@@ -105,7 +97,7 @@ function Settings() {
   }
 
   function getAllUsers(){
-    Axios.get(settings.SERVER_URL + "/api/test/listUsers").then((response) => {
+    Axios.get(settings.SERVER_URL + "/api/listUsers").then((response) => {
       
         
         const users = response.data;
@@ -114,6 +106,8 @@ function Settings() {
         setUserList(users);
     });
   }
+
+  
 
   if (loggedIn === true && permissionLevel === "3") {
     return (
@@ -270,6 +264,7 @@ function Settings() {
             </Form>
           </section>
           <section className="userList container border p-3 rounded my-3">
+
         <h4 className="display-6 m-3 ">Alla användare</h4>
           {userList.map((val) => {
             if(val.permissionlevel === 1){
@@ -278,13 +273,17 @@ function Settings() {
             if(val.permissionlevel === 3){
               const permissionLevelText = "3 - Admin";
             }
-            
+      
+            const timestamp = Date(val.lastLogin)
+            const date = new Date(timestamp).toLocaleString("sv-SE");
+
             return(
               <Card>
                 <Card.Body>
                   <Card.Title>{val.name}</Card.Title>
                   <Card.Text>E-post: {val.email}</Card.Text>
                   <Card.Text>Permission Level: {val.permissionlevel}</Card.Text>
+                  <Card.Text>Senaste inloggningen: {date}</Card.Text>
                 </Card.Body>
               </Card>
             )

@@ -95,10 +95,16 @@ function Login() {
             console.log("password ", res);
 
             if (res === true) {
-              // const user = response.data[0];
-              // console.log(user);
+              
+              
               delete response.data[0].hash;
               localStorage.setItem("user", JSON.stringify(response.data[0]));
+              
+              Axios.post(settings.SERVER_URL + "/api/userLoggedIn", {
+                email: response.data[0].email,
+              }).then(function(response) {
+                console.log("inserted time")
+              })
               alert("Du kommer nu att skickas till startsidan.");
               window.location.replace("/");
             } else {

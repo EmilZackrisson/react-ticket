@@ -50,6 +50,7 @@ app.get("/api", (req, res) => {
 app.get("/api/get", (req, res) => {
     // console.log("got get req", req)
     const sqlSelect = "SELECT * FROM tickets";
+    console.log("got get req")
     db.query(sqlSelect, (err, result) => {
         res.send(result);
         if (err) {
@@ -58,7 +59,7 @@ app.get("/api/get", (req, res) => {
     })
 })
 
-app.get("/api/test/listUsers", (req, res) => {
+app.get("/api/listUsers", (req, res) => {
     const sqlSelect = "SELECT * FROM users";
     db.query(sqlSelect, (err, result) => {
         res.send(result);
@@ -71,14 +72,31 @@ app.get("/api/test/listUsers", (req, res) => {
 app.post("/api/user", (req, res) => {
     // console.log("hej");
     const email = req.body.email;
-    const sqlSelect = "SELECT * FROM users WHERE email = '" + email + "' ;"
-    db.query(sqlSelect, (err, result) => {
+    const values = [email];
+    const sqlSelect = "SELECT * FROM users WHERE email = " + db.escape(email) + ";"
+    db.query(sqlSelect, [values], (err, result) => {
         // console.log(result);
         res.send(result);
         console.log("got user on request: ", result);
         if (err) {
             console.log(err);
             // console.log(result);
+        }
+    })
+})
+
+app.post("/api/userLoggedIn", (req, res) => {
+    // console.log("hej");
+    const date = new Date();
+    const time = date.getTime();
+
+    const email = req.body.email;
+
+    const sqlSelect = "UPDATE users SET lastLogin = " + db.escape(time) + " WHERE email = " + db.escape(email) + ";";
+    db.query(sqlSelect, (err, result) => {
+        // console.log(result);
+        if (err) {
+            console.log(err);
         }
     })
 })
@@ -90,9 +108,12 @@ app.post("/api/user/add", (req, res) => {
     const email = req.body.email;
     const hash = req.body.hash;
     const permissionLevel = req.body.permissionLevel;
+    const timeCreated = new Date();
 
-    const sqlSelect = "INSERT INTO users (name, email, hash, permissionlevel) VALUES ('" + name + "', '" + email + "', '" + hash + "', '" + permissionLevel + "' );"
-    db.query(sqlSelect, (err, result) => {
+    const values = [name, email, hash, permissionLevel, timeCreated];
+
+    const sqlSelect = "INSERT INTO users (name, email, hash, permissionlevel, timeCreated) VALUES(?);"
+    db.query(sqlSelect, [values], (err, result) => {
         // console.log(result);
         res.send(result);
         console.log("added user: ", result);
@@ -111,6 +132,7 @@ app.post('/api/insert', (req, res) => {
     const complete = 0;
     const email = req.body.senderEmail;
     const category = req.body.category;
+    const time = Date.now();
 
     console.log(req.body);
 
@@ -119,9 +141,10 @@ app.post('/api/insert', (req, res) => {
         return;
     }
 
-    let values = [senderName, issue, complete, email, category];
+    let values = [senderName, issue, complete, email, category, time];
+    console.log(values);
 
-    const sqlInsert = "INSERT INTO tickets (senderName, issue, complete, senderEmail, category) VALUES(?);";
+    const sqlInsert = "INSERT INTO tickets (senderName, issue, complete, senderEmail, category, timestamp) VALUES(?);";
     db.query(
         sqlInsert,
         [values],
@@ -141,47 +164,12 @@ app.post('/api/insert', (req, res) => {
         })
 })
 
-// app.post('/api/insert', (req, res) => {
-
-//     const senderName = req.body.senderName;
-//     var issue = String(req.body.issue);
-//     // const complete = req.body.complete;
-//     const complete = 0;
-//     const email = req.body.senderEmail;
-//     const category = req.body.category;
-
-//     console.log(req.body);
-
-//     if (senderName == "" | issue == "" | email == "") {
-//         res.sendStatus(406).send("Not Acceptable");
-//         return;
-//     }
-
-//     const sqlInsert = "INSERT INTO tickets (senderName, issue, complete, senderEmail, category) VALUES ('" + senderName + "', '" + issue + "', '" + complete + "', '" + email + "', '" + category + "' );"
-//     db.query(
-//         sqlInsert,
-//         [senderName, issue, complete, email, category],
-//         (err, result) => {
-//             if (err) {
-//                 console.log(sqlInsert)
-//                 console.log(err);
-
-//                 res.sendStatus(500);
-//                 // res.send("error från server");
-//             }
-//             else {
-//                 console.log("new issue reported and inserted")
-//                 res.sendStatus(200);
-//                 notifyNewIssue();
-//             }
-//         })
-// })
-
 //Update complete in mysql
 app.post('/api/patch/complete', (req, res) => {
 
     const id = req.body.id;
     const complete = req.body.complete;
+    const values = [id, complete];
 
     if (!id) {
         res.sendStatus(500);
@@ -191,7 +179,7 @@ app.post('/api/patch/complete', (req, res) => {
     console.log("ID: ", id, " complete: ", complete);
     // console.log(req.body);
 
-    const sqlInsert = "UPDATE tickets SET complete = " + complete + " " + "WHERE id = " + id + "";
+    const sqlInsert = "UPDATE tickets SET complete = " + db.escape(complete) + " " + "WHERE id = " + db.escape(id) + "";
     db.query(sqlInsert, (err, result) => {
         if (err) {
             console.log(err);
@@ -214,7 +202,7 @@ app.patch('/api/patch/issue', (req, res) => {
     console.log("ID: ", id, " issue: ", issue);
     console.log(req.body);
 
-    const sqlInsert = "UPDATE tickets SET issue = '" + issue + "' WHERE id = '" + id + "';";
+    const sqlInsert = "UPDATE tickets SET issue = " + db.escape(issue) + " WHERE id = " + db.escape(id) + ";";
     const sqlInsertCategory = "UPDATE tickets SET category = '" + category + "' WHERE id = '" + id + "';";
 
     db.query(sqlInsert, (err, result) => {
@@ -238,7 +226,7 @@ app.patch('/api/patch/category', (req, res) => {
 
     console.log("got category update",req.body);
 
-    const sqlInsertCategory = "UPDATE tickets SET category = '" + category + "' WHERE id = '" + id + "';";
+    const sqlInsertCategory = "UPDATE tickets SET category = " + db.escape(category) + " WHERE id = " + db.escape(id) + ";";
 
     db.query(sqlInsertCategory, (err, result) => {
         if (err) {
@@ -258,7 +246,7 @@ app.post("/api/delete/issue", (req, res) => {
 
     // res.sendStatus(500);
 
-    const sqlDelete = "DELETE FROM tickets WHERE id = " + id + ";";
+    const sqlDelete = "DELETE FROM tickets WHERE id = " + db.escape(id) + ";";
     db.query(sqlDelete, (err, result) => {
         if (err) {
             console.log(err);
