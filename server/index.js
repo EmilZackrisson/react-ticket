@@ -101,6 +101,22 @@ app.post("/api/userLoggedIn", (req, res) => {
     })
 })
 
+app.post("/api/userActive", (req, res) => {
+    // console.log("hej");
+    const date = new Date();
+    const time = date.getTime();
+
+    const email = req.body.email;
+
+    const sqlSelect = "UPDATE users SET lastActive = " + db.escape(time) + " WHERE email = " + db.escape(email) + ";";
+    db.query(sqlSelect, (err, result) => {
+        // console.log(result);
+        if (err) {
+            console.log(err);
+        }
+    })
+})
+
 app.post("/api/user/add", (req, res) => {
 
     // console.log("hej");
@@ -257,19 +273,6 @@ app.post("/api/delete/issue", (req, res) => {
             res.send("delete succesful");
         }
     })
-})
-
-app.get("/api/test/email", (req, res) => {
-    const body = req.body;
-
-    console.log("test hej")
-
-
-
-    res.send("hej");
-
-
-
 })
 
 function notifyNewIssue() {

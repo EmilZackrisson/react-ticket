@@ -17,6 +17,7 @@ import {
 import classNames from "classnames";
 import settings from "./settings.json"; // Set server url here
 // import Navbar from "./Navbar";
+import lastActive from "./lastActive";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 
@@ -69,6 +70,8 @@ function App() {
       setUsername(loggedInUser.name);
       setEmail(loggedInUser.email);
       setLoggedIn(true);
+
+      lastActive();
 
       setNavButtonLink("/logout");
       setNavButtonText("Logga ut");

@@ -14,6 +14,7 @@ import {
 } from "react-bootstrap";
 import settings from "./settings.json"; // Set server url here
 import bcrypt from "bcryptjs";
+import lastActive from "./lastActive";
 
 function Settings() {
   const [formData, setFormData] = useState({
@@ -27,7 +28,6 @@ function Settings() {
   const [permissionLevel, setPermissionLevel] = useState("");
   const [userList, setUserList] = useState([]);
 
-  const [loaded, setLoaded] = useState(false);
 
   const handleSubmit = (event) => {
     const form = event.currentTarget;
@@ -55,7 +55,7 @@ function Settings() {
 
       getAllUsers();
 
-      
+      lastActive();
     }
     if (!userStorage) {
       alert("Du är inte inloggad.");
@@ -271,8 +271,10 @@ function Settings() {
               const permissionLevelText = "3 - Admin";
             }
       
-            const timestamp = Date(val.lastLogin)
-            const date = new Date(timestamp).toLocaleString("sv-SE");
+            const userCreated = new Date(val.timeCreated).toLocaleString("sv-SE")
+            const userLastLogin = new Date(val.lastLogin).toLocaleString("sv-SE")
+            const userLastActive = new Date(val.lastActive).toLocaleString("sv-SE")
+            console.log(userList)
 
             return(
               <Card className="my-3">
@@ -280,7 +282,9 @@ function Settings() {
                   <Card.Title>{val.name}</Card.Title>
                   <Card.Text>E-post: {val.email}</Card.Text>
                   <Card.Text>Permission Level: {val.permissionlevel}</Card.Text>
-                  <Card.Text>Senaste inloggningen: {date}</Card.Text>
+                  <Card.Text>Konto skapat: {userCreated}</Card.Text>
+                  <Card.Text>Senaste inloggningen: {userLastLogin}</Card.Text>
+                  <Card.Text>Senast aktiv: {userLastActive}</Card.Text>
                 </Card.Body>
               </Card>
             )
