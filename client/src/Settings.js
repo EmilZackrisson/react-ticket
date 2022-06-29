@@ -80,10 +80,7 @@ function Settings() {
         })
           .then(() => {
             console.log("new user added");
-            // window.location.reload(false);
-            //   setIssuesList([...issuesList, { senderName: senderName, senderEmail: senderEmail, issue: issue, complete: 0 }]);
-            //   setTimeout(50);
-            //   updateList();
+            window.location.reload(false);
           })
           .catch((error) => {
             console.log("det gick inte att skicka");
@@ -159,7 +156,7 @@ function Settings() {
               noValidate
               validated={validated}
               onSubmit={handleSubmit}
-              className="container-xl m-3  "
+              className="container-xl m-3"
             >
               <Form.Group md="4" controlId="validationName">
                 <Form.Label>För och efternamn</Form.Label>
@@ -278,7 +275,7 @@ function Settings() {
             const date = new Date(timestamp).toLocaleString("sv-SE");
 
             return(
-              <Card>
+              <Card className="my-3">
                 <Card.Body>
                   <Card.Title>{val.name}</Card.Title>
                   <Card.Text>E-post: {val.email}</Card.Text>

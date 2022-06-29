@@ -108,7 +108,7 @@ app.post("/api/user/add", (req, res) => {
     const email = req.body.email;
     const hash = req.body.hash;
     const permissionLevel = req.body.permissionLevel;
-    const timeCreated = new Date();
+    const timeCreated = Date.now();
 
     const values = [name, email, hash, permissionLevel, timeCreated];
 
