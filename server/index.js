@@ -113,6 +113,10 @@ app.post("/api/userActive", (req, res) => {
         // console.log(result);
         if (err) {
             console.log(err);
+            res.sendStatus(500);
+        }
+        else{
+            res.sendStatus(200);
         }
     })
 })
