@@ -356,7 +356,6 @@ function App() {
                 setFormData({ ...formData, issue: e.target.value })
               }
             />
-            <Form.Label>Tänk på att inte använda " ? " i din text</Form.Label>
             <Form.Control.Feedback type="invalid">
               Vad är ditt problem?
             </Form.Control.Feedback>
