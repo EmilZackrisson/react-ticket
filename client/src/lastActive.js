@@ -15,7 +15,6 @@ function lastActive(){
       })
         .then(() => {
           console.log("user active updated");
-          window.location.reload(false);
         })
         .catch((error) => {
           console.log("det gick inte att skicka");
