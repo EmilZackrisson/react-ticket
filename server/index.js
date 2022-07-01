@@ -23,8 +23,8 @@ const db = mysql.createPool({
 })
 
 const httpsOptions = {
-    cert: fs.readFileSync(path.join(__dirname, 'ssl', 'emilzackrisson.tk.crt')),
-    key: fs.readFileSync(path.join(__dirname, 'ssl', 'emilzackrisson.tk.key'))
+    cert: fs.readFileSync(path.join(__dirname, 'ssl', 'emilzackrisson.se.crt')),
+    key: fs.readFileSync(path.join(__dirname, 'ssl', 'emilzackrisson.se.key'))
 }
 
 

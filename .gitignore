@@ -24,5 +24,4 @@ client/build/static/js/main.f25eeb49.chunk.js
 client/build/static/js/main.f25eeb49.chunk.js.map
 client/build/static/js/runtime~main.229c360f.js
 client/build/static/js/runtime~main.229c360f.js.map
-server/ssl/emilzackrisson.tk.crt
-server/ssl/emilzackrisson.tk.key
+server/ssl
