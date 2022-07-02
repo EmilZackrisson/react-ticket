@@ -198,7 +198,7 @@ function App() {
   const submitIssue = () => {
     console.log("försöker skicka");
 
-    Axios.post(settings.SERVER_URL + "/api/insert", {
+    Axios.post(settings.SERVER_URL + "/api/createIssue", {
       senderName: formData.name,
       issue: formData.issue,
       senderEmail: formData.email,
@@ -206,7 +206,7 @@ function App() {
       category: formData.category,
     })
       .then(() => {
-        console.log("skickat");
+        console.log("successfully sended issue to server");
         window.location.reload(false);
         //   setIssuesList([...issuesList, { senderName: senderName, senderEmail: senderEmail, issue: issue, complete: 0 }]);
         //   setTimeout(50);
@@ -379,6 +379,8 @@ function App() {
         {/* <Button onClick={testSend}>Testa</Button> */}
       </Form>
 
+      
+
       {issuesList.map((val) => {
         // console.log(val);
 
@@ -392,7 +394,35 @@ function App() {
           "container-xl"
         );
 
-        const time = new Date(val.timestamp).toLocaleString("sv-SE")
+        const time = new Date(val.timestamp).toLocaleString("sv-SE");
+
+        
+
+        if(val.id >= 129){ // Alla efter ID 129 är json
+          console.log(JSON.parse(val.issue))
+          // const issue = JSON.parse(val.issue);
+          var issueJson = JSON.parse(val.issue);
+          const issueLength = issueJson.length;
+
+          // console.log("längd: ",issueLength);
+
+          if(issueLength > 1){ // Om problem har blivit uppdaterat
+            const timeUpdated = new Date(issueJson[issueLength-1].timestamp).toLocaleString("sv-SE");
+            var updated = "| Uppdaterades den " + timeUpdated;
+
+            var issue = issueJson[issueLength-1].issue;
+          } else{
+            var issue = issueJson[0].issue;
+          }
+
+          
+        } else { // Om problemet är äldre än id 129
+          var issue = val.issue;
+          const updated = "";
+        }
+
+        
+        
         
 
         // var issue = val.issue;
@@ -407,10 +437,10 @@ function App() {
                   <a href={"mailto:" + val.senderEmail}>{val.senderEmail}</a> |{" "}
                   {val.category} | {time}
                 </Card.Title>
-                <Card.Text>{val.issue}</Card.Text>
+                <Card.Text>{issue}</Card.Text>
                 <Form onSubmit={handleUpdate}>
                   <FormGroup controlId="validationUpdate">
-                    <Form.Label>Uppdatera problem</Form.Label>
+                    <Form.Label>Uppdatera problem {updated}</Form.Label>
                     <Form.Control
                       type="text"
                       placeholder="Problem"
@@ -421,7 +451,7 @@ function App() {
                           id: val.id,
                         })
                       }
-                      defaultValue={val.issue}
+                      defaultValue={issue}
                     />
                     <Form.Check
                       type="checkbox"
