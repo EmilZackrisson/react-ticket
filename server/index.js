@@ -159,7 +159,7 @@ app.post("/api/createIssue", (req, res) => {
   const category = req.body.category;
   const time = Date.now();
 
-  const issueJson = [{ issue: issue, timestamp: time }];
+  const issueJson = [{ "issue": issue, "timestamp": time }];
 
   console.log(req.body);
 
@@ -234,50 +234,62 @@ app.patch("/api/patch/issue", (req, res) => {
   const id = req.body.id;
   const issue = req.body.issue;
 
-  var issues;
+  console.log(id, issue);
+
   var issueLength;
+  var issues = new Array();
 
   if (id >= 129) {
     const sqlGet = "SELECT issue FROM tickets WHERE id = " + db.escape(id) + ";";
+    console.log(sqlGet);
     db.query(sqlGet, (err, result) => {
       if (err) {
         console.log(err);
         res.sendStatus(500).send(err);
       } else {
-        issues = result[0].issue;
+        // console.log(result);
+        issuesDb = JSON.parse(result[0].issue);
         issueLength = issues.length;
+
+        issues.push(issuesDb[issueLength]); // Lägger till den älsta sist
+        // issues = result[0].issue;
+        
+        console.log("issueLength: ", issueLength);
         console.log("issues: ",issues);
+
+        var issueUpdate = {
+          "issue": issue,
+          "timestamp": Date.now()
+        }
+        issues.push(issueUpdate);
+        console.log("Issue update object: ",issueUpdate);
+      
+        
+        console.log("All issues after push",issues);
+      
+      
+        console.log("stringified:", JSON.stringify(issues))
+      
+        const sqlInsert =
+          "UPDATE tickets SET issue = " +
+          db.escape(JSON.stringify(issues)) +
+          " WHERE id = " +
+          db.escape(id) +
+          ";";
+        db.query(sqlInsert, (err, result) => {
+          if (err) {
+            console.log(err);
+            res.sendStatus(500).send(err);
+          } else {
+            // notifyChangedIssue();
+            res.send("Update issue succesful");
+          }
+        });
       }
     });
   }
 
-  const issueUpdate = {
-    issue: issue,
-    timestamp: Date.now()
-  }
-
-//   issues.push(issueUpdate);
-  issues[issueLength] = issueUpdate;
-  console.log(issues);
-
-  console.log("ID: ", id, " issue: ", issue);
-  console.log(req.body);
-
-  const sqlInsert =
-    "UPDATE tickets SET issue = " +
-    db.escape(issues) +
-    " WHERE id = " +
-    db.escape(id) +
-    ";";
-//   db.query(sqlInsert, (err, result) => {
-//     if (err) {
-//       console.log(err);
-//       res.sendStatus(500).send(err);
-//     } else {
-//       notifyChangedIssue();
-//       res.send("Update issue succesful");
-//     }
-//   });
+  
 });
 
 //Update category

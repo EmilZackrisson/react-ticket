@@ -396,13 +396,21 @@ function App() {
 
         const time = new Date(val.timestamp).toLocaleString("sv-SE");
 
+        // if(val.id === 134){
+        //   console.log(val.issue);
+        //   var issueJson = JSON.parse(val.issue)
+        //   console.log(issueJson[0].issue);
+        // }
         
 
-        if(val.id >= 129){ // Alla efter ID 129 är json
-          console.log(JSON.parse(val.issue))
+        
+
+        if(val.id >= 130){ // Alla efter ID 129 är json
+          // console.log(val.issue[0]);
           // const issue = JSON.parse(val.issue);
-          var issueJson = JSON.parse(val.issue);
+          var issueJson = JSON.parse(val.issue)
           const issueLength = issueJson.length;
+          console.log(issueJson)
 
           // console.log("längd: ",issueLength);
 
