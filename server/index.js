@@ -106,6 +106,26 @@ app.post("/api/userLoggedIn", (req, res) => {
   });
 });
 
+app.post("/api/userActive", (req, res) => {
+    // console.log("hej");
+    const date = new Date();
+    const time = date.getTime();
+
+    const email = req.body.email;
+
+    const sqlSelect = "UPDATE users SET lastActive = " + db.escape(time) + " WHERE email = " + db.escape(email) + ";";
+    db.query(sqlSelect, (err, result) => {
+        // console.log(result);
+        if (err) {
+            console.log(err);
+            res.sendStatus(500);
+        }
+        else{
+            res.sendStatus(200);
+        }
+    })
+})
+
 app.post("/api/user/add", (req, res) => {
   // console.log("hej");
   const name = req.body.name;

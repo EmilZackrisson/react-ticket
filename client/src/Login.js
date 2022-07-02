@@ -9,6 +9,7 @@ import {
   Alert,
   Navbar,
   Container,
+  Modal,
 } from "react-bootstrap";
 import settings from "./settings.json"; // Set server url here
 import bcrypt from "bcryptjs";
@@ -22,6 +23,7 @@ function Login() {
   const [navButtonText, setNavButtonText] = useState("");
   const [navUserState, setNavUserState] = useState("");
   const [navHello, setNavHello] = useState("");
+  const [modalShow, setModalShow] = useState(false);
 
   const [validated, setValidated] = useState(false);
 
@@ -75,7 +77,7 @@ function Login() {
       //Ladda användare från databas
       Axios.post(settings.SERVER_URL + "/api/user", {
         email: email,
-      }).then(function(response) {
+      }).then(function (response) {
         console.log(response.data);
 
         console.log(typeof response.data);
@@ -95,16 +97,14 @@ function Login() {
             console.log("password ", res);
 
             if (res === true) {
-              
-              
               delete response.data[0].hash;
               localStorage.setItem("user", JSON.stringify(response.data[0]));
-              
+
               Axios.post(settings.SERVER_URL + "/api/userLoggedIn", {
                 email: response.data[0].email,
-              }).then(function(response) {
-                console.log("inserted time")
-              })
+              }).then(function (response) {
+                console.log("inserted time");
+              });
               alert("Du kommer nu att skickas till startsidan.");
               window.location.replace("/");
             } else {
@@ -186,12 +186,11 @@ function Login() {
           </Form.Group>
         </Row>
         <Button type="button" onClick={checkUser}>
-          Skicka
+          Logga In
         </Button>
-        {/* <Button type="submit">Skicka</Button> */}
-        {/* <Button onClick={updateList} className="m-2 btn-warning">test ladda lista</Button> */}
-
-        {/* <Button onClick={testSend}>Testa</Button> */}
+        {/* <Button variant="outline-secondary" className="mx-2">
+          Glömt lösenord?
+        </Button> */}
       </Form>
     </>
   );
