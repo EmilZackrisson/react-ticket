@@ -1,0 +1,21 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Build Docker client image
+      run: docker build ./client --file dockerfile --tag react-ticket-client:latest
+      
+    - name: Build Docker server image
+      run: docker build ./server --file dockerfile --tag react-ticket-server:latest
