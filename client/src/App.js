@@ -22,6 +22,9 @@ import lastActive from "./lastActive";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 function App() {
+
+  const serverUrl = localStorage.getItem("serverUrl");
+
   const [issuesList, setIssuesList] = useState([]);
 
   const [username, setUsername] = useState("");
