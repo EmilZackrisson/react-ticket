@@ -12,7 +12,8 @@ import {
   Row,
   Container,
   Nav,
-  Navbar
+  Navbar,
+  Badge
 } from "react-bootstrap";
 import classNames from "classnames";
 import settings from "./settings.json"; // Set server url here
@@ -57,12 +58,21 @@ function App() {
   ];
 
   const priorityArray = [
+    "Välj prioritet",
     "Hög",
     "Medel",
     "Låg"
   ];
 
   const categories = categoriesArray.map((item) => {
+    return (
+      <option key={item} value={item}>
+        {item}
+      </option>
+    );
+  });
+
+  const priorities = priorityArray.map((item) => {
     return (
       <option key={item} value={item}>
         {item}
@@ -159,6 +169,22 @@ function App() {
     });
   }
 
+  function updatePriority(id, priority) {
+    console.log(id, priority);
+
+    // console.log(id, category);
+    Axios.patch(settings.SERVER_URL + "/api/patch/priority", {
+      priority: priority,
+      id: id,
+    }).then(() => {
+      // setIssuesList([...issuesList, { senderName: senderName, issue: issue, complete: complete }])
+      updateList();
+      if (debug) {
+        console.log("update priority ran");
+      }
+    });
+  }
+
   // const handleSubmit = (event) =>
   const deleteIssue = (event) => {
     console.log(event);
@@ -214,6 +240,7 @@ function App() {
       senderEmail: formData.email,
       complete: 0,
       category: formData.category,
+      priority: formData.priority,
     })
       .then(() => {
         console.log("successfully sended issue to server");
@@ -390,7 +417,7 @@ function App() {
                 setFormData({ ...formData, priority: e.target.value })
               }
             >
-              {priorityArray}
+              {priorities}
             </Form.Select>
           </Form.Group>
           {/* {console.log(formData.category)} */}
@@ -417,6 +444,18 @@ function App() {
         );
 
         const time = new Date(val.timestamp).toLocaleString("sv-SE");
+
+        if(val.priority != ""){
+          var priorityText = "Prioritet: " + val.priority;
+          var priorityBadgeBg = classNames(
+            {
+              "info": val.priority == "Låg",
+              "warning": val.priority == "Medel",
+              "danger": val.priority == "Hög"
+            },
+            "mx-1"
+          )
+        }
    
 
 
@@ -456,7 +495,8 @@ function App() {
                 <Card.Title>
                   #{val.id} | {val.senderName}{" "}
                   <a href={"mailto:" + val.senderEmail}>{val.senderEmail}</a> |{" "}
-                  {val.category} | {time}
+                  {val.category} | {time} 
+                  <Badge bg={priorityBadgeBg}>{priorityText}</Badge>
                 </Card.Title>
                 <Card.Text>{issue}</Card.Text>
                 <Form onSubmit={handleUpdate}>
@@ -489,6 +529,16 @@ function App() {
                       defaultValue={val.category}
                     >
                       {categories}
+                    </Form.Select>
+                  </Form.Group>
+                  <Form.Group>
+                    <Form.Label>Prioritet</Form.Label>
+                    <Form.Select
+                      aria-label="Prioritet"
+                      onChange={(e) => updatePriority(val.id, e.target.value)}
+                      defaultValue={val.priority}
+                    >
+                      {priorities}
                     </Form.Select>
                   </Form.Group>
                   <Button type="submit">Uppdatera</Button>

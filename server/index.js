@@ -231,6 +231,38 @@ app.post("/api/patch/complete", (req, res) => {
   });
 });
 
+//Update complete in mysql
+app.patch("/api/patch/priority", (req, res) => {
+  const id = req.body.id;
+  const priority = req.body.priority;
+  const values = [id, priority];
+
+  if (!id) {
+    res.sendStatus(500);
+    res.send("no id");
+  }
+
+  console.log("ID: ", id, " priority: ", priority);
+  // console.log(req.body);
+
+  const sqlInsert =
+    "UPDATE tickets SET priority = " +
+    db.escape(priority) +
+    " " +
+    "WHERE id = " +
+    db.escape(id) +
+    "";
+  db.query(sqlInsert, (err, result) => {
+    if (err) {
+      console.log(err);
+      res.sendStatus(500).send(err);
+    } else {
+      res.send("Update priority succesful");
+      // notifySolvedIssue(id, priority);
+    }
+  });
+});
+
 //Update issue
 app.patch("/api/patch/issue", (req, res) => {
   const id = req.body.id;
