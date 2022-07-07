@@ -233,6 +233,7 @@ app.post("/api/patch/complete", (req, res) => {
 app.patch("/api/patch/issue", (req, res) => {
   const id = req.body.id;
   const issue = req.body.issue;
+  const updater = req.body.updater;
 
   console.log(id, issue);
 
@@ -249,9 +250,11 @@ app.patch("/api/patch/issue", (req, res) => {
       } else {
         // console.log(result);
         issuesDb = JSON.parse(result[0].issue);
+        console.log("raw from db: ", result[0].issue)
+        console.log("issue from db: ", issuesDb);
         issueLength = issues.length;
 
-        issues.push(issuesDb[issueLength]); // Lägger till den älsta sist
+        issues.push(issuesDb);
         // issues = result[0].issue;
         
         console.log("issueLength: ", issueLength);
@@ -259,16 +262,17 @@ app.patch("/api/patch/issue", (req, res) => {
 
         var issueUpdate = {
           "issue": issue,
+          "updater": updater,
           "timestamp": Date.now()
         }
         issues.push(issueUpdate);
-        console.log("Issue update object: ",issueUpdate);
+        // console.log("Issue update object: ",issueUpdate);
       
         
-        console.log("All issues after push",issues);
+        // console.log("All issues after push",issues);
       
       
-        console.log("stringified:", JSON.stringify(issues))
+        console.log("issues after update:", issues)
       
         const sqlInsert =
           "UPDATE tickets SET issue = " +

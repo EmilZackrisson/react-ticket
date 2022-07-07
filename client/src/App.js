@@ -230,6 +230,7 @@ function App() {
       issue: issueUpdate.issue,
       id: issueUpdate.id,
       category: issueUpdate.category,
+      updater: username,
     }).then(() => {
       // setIssuesList([...issuesList, { senderName: senderName, issue: issue, complete: complete }])
       updateList();
@@ -414,6 +415,8 @@ function App() {
             var updated = "| Uppdaterades den " + timeUpdated;
 
             var issue = issueJson[issueLength-1].issue;
+            var updater = issueJson[issueLength-1].updater;
+            
           } else{
             var issue = issueJson[0].issue;
           }
@@ -440,7 +443,7 @@ function App() {
                 <Card.Text>{issue}</Card.Text>
                 <Form onSubmit={handleUpdate}>
                   <FormGroup controlId="validationUpdate">
-                    <Form.Label>Uppdatera problem {updated}</Form.Label>
+                    <Form.Label>Uppdatera problem {updated} av {updater}</Form.Label>
                     <Form.Control
                       type="text"
                       placeholder="Problem"
