@@ -159,7 +159,7 @@ app.post("/api/createIssue", (req, res) => {
   const category = req.body.category;
   const time = Date.now();
 
-  const issueJson = [{ "issue": issue, "timestamp": time }];
+  const issueJson = { "issue": issue, "timestamp": time };
 
   console.log(req.body);
 
