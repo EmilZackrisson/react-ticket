@@ -158,6 +158,7 @@ app.post("/api/createIssue", (req, res) => {
   const email = req.body.senderEmail;
   const category = req.body.category;
   const time = Date.now();
+  const priority = req.body.priority;
 
   const issueJson = [{ "issue": issue, "timestamp": time }];
 
@@ -175,12 +176,13 @@ app.post("/api/createIssue", (req, res) => {
     email,
     category,
     time,
+    priority
   ];
   console.log(values);
 
   // const sqlInsert = "INSERT INTO tickets (senderName, issue, complete, senderEmail, category, timestamp) VALUES(?);";
   const sqlInsert =
-    "INSERT INTO tickets (senderName, issue, complete, senderEmail, category, timestamp) VALUES(?);";
+    "INSERT INTO tickets (senderName, issue, complete, senderEmail, category, timestamp, priority) VALUES(?);";
 
   db.query(sqlInsert, [values], (err, result) => {
     if (err) {
