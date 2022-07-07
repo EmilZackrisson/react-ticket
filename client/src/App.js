@@ -22,6 +22,9 @@ import lastActive from "./lastActive";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 function App() {
+
+  const serverUrl = localStorage.getItem("serverUrl");
+
   const [issuesList, setIssuesList] = useState([]);
 
   const [username, setUsername] = useState("");
@@ -395,14 +398,14 @@ function App() {
         );
 
         const time = new Date(val.timestamp).toLocaleString("sv-SE");
+   
 
-        
 
-        if(val.id >= 129){ // Alla efter ID 129 är json
-          console.log(JSON.parse(val.issue))
-          // const issue = JSON.parse(val.issue);
-          var issueJson = JSON.parse(val.issue);
+        // Check if issue is JSON
+        try {  
+          var issueJson = JSON.parse(val.issue)
           const issueLength = issueJson.length;
+          console.log(issueJson)
 
           // console.log("längd: ",issueLength);
 
@@ -414,13 +417,10 @@ function App() {
           } else{
             var issue = issueJson[0].issue;
           }
-
-          
-        } else { // Om problemet är äldre än id 129
+        } catch (e) {  
           var issue = val.issue;
           const updated = "";
         }
-
         
         
         
