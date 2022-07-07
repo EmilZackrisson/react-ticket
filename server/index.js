@@ -160,7 +160,7 @@ app.post("/api/createIssue", (req, res) => {
   const time = Date.now();
   const priority = req.body.priority;
 
-  const issueJson = [{ "issue": issue, "timestamp": time }];
+  const issueJson = { "issue": issue, "timestamp": time };
 
   console.log(req.body);
 
