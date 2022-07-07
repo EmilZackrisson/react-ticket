@@ -40,6 +40,7 @@ function App() {
     email: "",
     issue: "",
     category: "",
+    priority: ""
   });
 
   const debug = true;
@@ -53,6 +54,12 @@ function App() {
     "Alice Home Assistant",
     "Alice Lägenhet",
     "Övrigt",
+  ];
+
+  const priorityArray = [
+    "Hög",
+    "Medel",
+    "Låg"
   ];
 
   const categories = categoriesArray.map((item) => {
@@ -375,6 +382,17 @@ function App() {
               {categories}
             </Form.Select>
           </Form.Group>
+          <Form.Group>
+            <Form.Label>Prioritet</Form.Label>
+            <Form.Select
+              aria-label="Prioritet"
+              onChange={(e) =>
+                setFormData({ ...formData, priority: e.target.value })
+              }
+            >
+              {priorityArray}
+            </Form.Select>
+          </Form.Group>
           {/* {console.log(formData.category)} */}
         </Row>
         <Button type="submit">Skicka</Button>
@@ -418,7 +436,7 @@ function App() {
             var updater = issueJson[issueLength-1].updater;
             
           } else{
-            var issue = issueJson[0].issue;
+            var issue = issueJson.issue;
           }
         } catch (e) {  
           var issue = val.issue;
