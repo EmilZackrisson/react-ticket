@@ -158,6 +158,7 @@ app.post("/api/createIssue", (req, res) => {
   const email = req.body.senderEmail;
   const category = req.body.category;
   const time = Date.now();
+  const priority = req.body.priority;
 
   const issueJson = { "issue": issue, "timestamp": time };
 
@@ -175,12 +176,13 @@ app.post("/api/createIssue", (req, res) => {
     email,
     category,
     time,
+    priority
   ];
   console.log(values);
 
   // const sqlInsert = "INSERT INTO tickets (senderName, issue, complete, senderEmail, category, timestamp) VALUES(?);";
   const sqlInsert =
-    "INSERT INTO tickets (senderName, issue, complete, senderEmail, category, timestamp) VALUES(?);";
+    "INSERT INTO tickets (senderName, issue, complete, senderEmail, category, timestamp, priority) VALUES(?);";
 
   db.query(sqlInsert, [values], (err, result) => {
     if (err) {
@@ -225,6 +227,38 @@ app.post("/api/patch/complete", (req, res) => {
     } else {
       res.send("Update completed succesful");
       notifySolvedIssue(id, complete);
+    }
+  });
+});
+
+//Update complete in mysql
+app.patch("/api/patch/priority", (req, res) => {
+  const id = req.body.id;
+  const priority = req.body.priority;
+  const values = [id, priority];
+
+  if (!id) {
+    res.sendStatus(500);
+    res.send("no id");
+  }
+
+  console.log("ID: ", id, " priority: ", priority);
+  // console.log(req.body);
+
+  const sqlInsert =
+    "UPDATE tickets SET priority = " +
+    db.escape(priority) +
+    " " +
+    "WHERE id = " +
+    db.escape(id) +
+    "";
+  db.query(sqlInsert, (err, result) => {
+    if (err) {
+      console.log(err);
+      res.sendStatus(500).send(err);
+    } else {
+      res.send("Update priority succesful");
+      // notifySolvedIssue(id, priority);
     }
   });
 });
