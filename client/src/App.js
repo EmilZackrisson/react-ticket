@@ -398,19 +398,11 @@ function App() {
         );
 
         const time = new Date(val.timestamp).toLocaleString("sv-SE");
+   
 
-        // if(val.id === 134){
-        //   console.log(val.issue);
-        //   var issueJson = JSON.parse(val.issue)
-        //   console.log(issueJson[0].issue);
-        // }
-        
 
-        
-
-        if(val.id >= 130){ // Alla efter ID 129 är json
-          // console.log(val.issue[0]);
-          // const issue = JSON.parse(val.issue);
+        // Check if issue is JSON
+        try {  
           var issueJson = JSON.parse(val.issue)
           const issueLength = issueJson.length;
           console.log(issueJson)
@@ -425,13 +417,10 @@ function App() {
           } else{
             var issue = issueJson[0].issue;
           }
-
-          
-        } else { // Om problemet är äldre än id 129
+        } catch (e) {  
           var issue = val.issue;
           const updated = "";
         }
-
         
         
         
