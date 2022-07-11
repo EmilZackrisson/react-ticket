@@ -44,6 +44,13 @@ function App() {
     priority: ""
   });
 
+  var priorityList = [
+    "Inte Specificerad",
+    "Låg",
+    "Medel",
+    "Hög"
+  ];
+
   const debug = true;
   const categoriesArray = [
     "Klicka för att välja kategori",
@@ -444,14 +451,16 @@ function App() {
         );
 
         const time = new Date(val.timestamp).toLocaleString("sv-SE");
+        console.log(val.id, val.priority)
 
         if(val.priority != ""){
-          var priorityText = "Prioritet: " + val.priority;
+          var priorityText = "Prioritet: " + priorityList[val.priority];
           var priorityBadgeBg = classNames(
             {
-              "info": val.priority == "Låg",
-              "warning": val.priority == "Medel",
-              "danger": val.priority == "Hög"
+              "secondary": val.priority === 0,
+              "info": val.priority === 1,
+              "warning": val.priority === 2,
+              "danger": val.priority === 3
             },
             "mx-1"
           )
