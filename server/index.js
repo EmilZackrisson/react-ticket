@@ -48,7 +48,7 @@ app.get("/api", (req, res) => {
 
 app.get("/api/get", (req, res) => {
   // console.log("got get req", req)
-  const sqlSelect = "SELECT * FROM tickets";
+  const sqlSelect = "SELECT * FROM tickets ORDER BY priority DESC";
   console.log("got get req");
   db.query(sqlSelect, (err, result) => {
     res.send(result);
