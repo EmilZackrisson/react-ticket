@@ -10,6 +10,7 @@ const fs = require("fs");
 const https = require("https");
 const path = require("path");
 const { stringify } = require("querystring");
+const jwt = require("jsonwebtoken");
 
 require("dotenv").config();
 // console.log(process.env) // remove this after you've confirmed it working
@@ -21,6 +22,7 @@ const db = mysql.createPool({
   password: process.env.DB_PASS,
   database: process.env.DB_DATABASE,
 });
+
 
 const httpsOptions = {
   cert: fs.readFileSync(path.join(__dirname, "ssl", "emilzackrisson.tk.crt")),
@@ -48,6 +50,7 @@ app.get("/api", (req, res) => {
 
 app.get("/api/get", (req, res) => {
   // console.log("got get req", req)
+  validateToken(req, res);
   const sqlSelect = "SELECT * FROM tickets";
   console.log("got get req");
   db.query(sqlSelect, (err, result) => {
@@ -76,7 +79,10 @@ app.post("/api/user", (req, res) => {
     "SELECT * FROM users WHERE email = " + db.escape(email) + ";";
   db.query(sqlSelect, [values], (err, result) => {
     // console.log(result);
+    const token = generateAccessToken(result[0].name);
+    result[0].token = token;
     res.send(result);
+    // res.send(token);
     console.log("got user on request: ", result);
     if (err) {
       console.log(err);
@@ -437,6 +443,23 @@ function notifyChangedIssue() {
       changedIssue.senderName,
       changedIssue.id
     );
+  });
+}
+
+function generateAccessToken(username) {
+  return jwt.sign({ username }, process.env.JSON_TOKEN_SECRET, { expiresIn: "1800s", });
+}
+
+function validateToken(req, res, next) {
+  const authHeader = req.headers["authorization"];
+  const token = authHeader && authHeader.split(" ")[1];
+
+  if (token == null) return res.sendStatus(401);
+
+  jwt.verify(token, process.env.JSON_TOKEN_SECRET, (err, decoded) => {
+    if (err) return res.sendStatus(403);
+    req.tokenData = decoded;
+    next();
   });
 }
 

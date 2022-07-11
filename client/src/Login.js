@@ -91,6 +91,8 @@ function Login() {
           // alert("E-post adressen är rätt.")
 
           const hash = response.data[0].hash;
+          const token = response.data[0].token;
+          console.log(response)
 
           bcrypt.compare(password, hash).then((res) => {
             // res === true

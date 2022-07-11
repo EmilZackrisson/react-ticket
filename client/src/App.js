@@ -115,7 +115,14 @@ function App() {
       setNavHello("Hej Världen!");
     }
 
-    Axios.get(settings.SERVER_URL + "/api/get")
+
+    const token = localStorage.getItem("token") || "";
+    const headers = 
+  {      
+      "authorization": token,      
+  };  
+
+    Axios.get(settings.SERVER_URL + "/api/get", { headers: headers })
       .then((response) => {
         setIssuesList(response.data);
       })

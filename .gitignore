@@ -27,3 +27,4 @@ server/ssl/emilzackrisson.tk.crt
 server/ssl/emilzackrisson.tk.key
 server/ssl/emilzackrisson.se.crt
 server/ssl/emilzackrisson.se.key
+client/src/settings.json
