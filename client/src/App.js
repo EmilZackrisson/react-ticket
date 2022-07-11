@@ -13,7 +13,7 @@ import {
   Container,
   Nav,
   Navbar,
-  Badge
+  Badge,
 } from "react-bootstrap";
 import classNames from "classnames";
 import settings from "./settings.json"; // Set server url here
@@ -23,7 +23,6 @@ import lastActive from "./lastActive";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 function App() {
-
   const serverUrl = localStorage.getItem("serverUrl");
 
   const [issuesList, setIssuesList] = useState([]);
@@ -41,7 +40,7 @@ function App() {
     email: "",
     issue: "",
     category: "",
-    priority: ""
+    priority: "",
   });
 
   const debug = true;
@@ -57,12 +56,7 @@ function App() {
     "Övrigt",
   ];
 
-  const priorityArray = [
-    "Välj prioritet",
-    "Hög",
-    "Medel",
-    "Låg"
-  ];
+  const priorityArray = ["Välj prioritet", "Hög", "Medel", "Låg"];
 
   const categories = categoriesArray.map((item) => {
     return (
@@ -103,7 +97,6 @@ function App() {
         name: loggedInUser.name,
         email: loggedInUser.email,
       });
-
 
       // For debug
       console.log("Username:", loggedInUser.name);
@@ -233,6 +226,18 @@ function App() {
 
   const submitIssue = () => {
     console.log("försöker skicka");
+    if(formData.priority == "Låg"){
+      var priorityInt = 1;
+    }
+    else if(formData.priority == "Medel"){
+      var priorityInt = 2;
+    }
+    else if(formData.priority == "Hög"){
+      var priorityInt = 3;
+    }
+    else if(formData.priority == "Välj prioritet"){
+      var priorityInt = 0;
+    }
 
     Axios.post(settings.SERVER_URL + "/api/createIssue", {
       senderName: formData.name,
@@ -240,7 +245,8 @@ function App() {
       senderEmail: formData.email,
       complete: 0,
       category: formData.category,
-      priority: formData.priority,
+      // priority: formData.priority,
+      priority: priorityInt,
     })
       .then(() => {
         console.log("successfully sended issue to server");
@@ -410,7 +416,7 @@ function App() {
             </Form.Select>
           </Form.Group>
           <Form.Group>
-            <Form.Label>Prioritet</Form.Label>
+          <Form.Label>Prioritet</Form.Label>
             <Form.Select
               aria-label="Prioritet"
               onChange={(e) =>
@@ -428,8 +434,6 @@ function App() {
         {/* <Button onClick={testSend}>Testa</Button> */}
       </Form>
 
-      
-
       {issuesList.map((val) => {
         // console.log(val);
 
@@ -445,45 +449,42 @@ function App() {
 
         const time = new Date(val.timestamp).toLocaleString("sv-SE");
 
-        if(val.priority != ""){
+        if (val.priority != "") {
           var priorityText = "Prioritet: " + val.priority;
           var priorityBadgeBg = classNames(
             {
-              "info": val.priority == "Låg",
-              "warning": val.priority == "Medel",
-              "danger": val.priority == "Hög"
+              info: val.priority == "Låg",
+              warning: val.priority == "Medel",
+              danger: val.priority == "Hög",
             },
             "mx-1"
-          )
+          );
         }
-   
-
 
         // Check if issue is JSON
-        try {  
-          var issueJson = JSON.parse(val.issue)
+        try {
+          var issueJson = JSON.parse(val.issue);
           const issueLength = issueJson.length;
-          console.log(issueJson)
+          console.log(issueJson);
 
           // console.log("längd: ",issueLength);
 
-          if(issueLength > 1){ // Om problem har blivit uppdaterat
-            const timeUpdated = new Date(issueJson[issueLength-1].timestamp).toLocaleString("sv-SE");
+          if (issueLength > 1) {
+            // Om problem har blivit uppdaterat
+            const timeUpdated = new Date(
+              issueJson[issueLength - 1].timestamp
+            ).toLocaleString("sv-SE");
             var updated = "| Uppdaterades den " + timeUpdated;
 
-            var issue = issueJson[issueLength-1].issue;
-            var updater = issueJson[issueLength-1].updater;
-            
-          } else{
+            var issue = issueJson[issueLength - 1].issue;
+            var updater = issueJson[issueLength - 1].updater;
+          } else {
             var issue = issueJson.issue;
           }
-        } catch (e) {  
+        } catch (e) {
           var issue = val.issue;
           const updated = "";
         }
-        
-        
-        
 
         // var issue = val.issue;
 
@@ -495,13 +496,15 @@ function App() {
                 <Card.Title>
                   #{val.id} | {val.senderName}{" "}
                   <a href={"mailto:" + val.senderEmail}>{val.senderEmail}</a> |{" "}
-                  {val.category} | {time} 
+                  {val.category} | {time}
                   <Badge bg={priorityBadgeBg}>{priorityText}</Badge>
                 </Card.Title>
                 <Card.Text>{issue}</Card.Text>
                 <Form onSubmit={handleUpdate}>
                   <FormGroup controlId="validationUpdate">
-                    <Form.Label>Uppdatera problem {updated} av {updater}</Form.Label>
+                    <Form.Label>
+                      Uppdatera problem {updated} av {updater}
+                    </Form.Label>
                     <Form.Control
                       type="text"
                       placeholder="Problem"

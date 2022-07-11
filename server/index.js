@@ -158,7 +158,8 @@ app.post("/api/createIssue", (req, res) => {
   const email = req.body.senderEmail;
   const category = req.body.category;
   const time = Date.now();
-  const priority = req.body.priority;
+  // const priority = req.body.priority;
+  const priority = parseInt(req.body.priority, 10);
 
   const issueJson = { "issue": issue, "timestamp": time };
 
@@ -194,7 +195,7 @@ app.post("/api/createIssue", (req, res) => {
     } else {
       console.log("new issue reported and inserted");
       res.sendStatus(200);
-      notifyNewIssue();
+      // notifyNewIssue();
     }
   });
 });
@@ -380,23 +381,25 @@ app.get("/api/test/email", (req, res) => {
   res.send("hej");
 });
 
-function notifyNewIssue() {
-  const sqlSelectHigestId =
-    "SELECT * FROM tickets WHERE id = ( SELECT MAX(id) FROM tickets );";
-  db.query(sqlSelectHigestId, (err, result) => {
-    const newestIssue = result[0];
-    // console.log(newestIssue.id);
-    const newestId = newestIssue.id;
-    console.log("Newest id: ", newestId);
+// function notifyNewIssue() {
+//   const sqlSelectHigestId =
+//     "SELECT * FROM tickets WHERE id = ( SELECT MAX(id) FROM tickets );";
+//   db.query(sqlSelectHigestId, (err, result) => {
+//     const newestIssue = result[0];
+//     // console.log(newestIssue.id);
+//     const newestId = newestIssue.id;
+//     console.log("Newest id: ", newestId);
 
-    // email.sendNewIssue(newestIssue);
-    discord.sendNewIssue(
-      newestIssue.issue,
-      newestIssue.senderName,
-      newestIssue.id
-    );
-  });
-}
+//     console.log(JSON.parse(newestIssue.issue.issue))
+
+//     // email.sendNewIssue(newestIssue);
+//     // discord.sendNewIssue(
+//     //   JSON.parse(newestIssue.issue),
+//     //   newestIssue.senderName,
+//     //   newestIssue.id
+//     // );
+//   });
+// }
 
 function notifySolvedIssue(id, complete) {
   if (complete === 1) {
@@ -416,6 +419,7 @@ function notifySolvedIssue(id, complete) {
       const solvedIssue = result[0];
       // console.log(newestIssue.id);
       // console.log("Newest id: ", newestId)
+      const issue = JSON.parse(solvedIssue.issue)
 
       discord.sendNotCompleted(solvedIssue.issue, solvedIssue.senderName, id);
     });
