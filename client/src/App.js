@@ -140,6 +140,10 @@ function App() {
     if (debug) {
       console.log(id, completeStatus);
     }
+    if (!loggedIn){
+      alert("Du måste vara inloggad för att uppdatera");
+      return;
+    }
 
     Axios.post(settings.SERVER_URL + "/api/patch/complete", {
       complete: Number(completeStatus),
@@ -154,6 +158,10 @@ function App() {
 
   function updateCategory(id, category) {
     console.log(id, category);
+    if (!loggedIn){
+      alert("Du måste vara inloggad för att uppdatera");
+      return;
+    }
 
     Axios.patch(settings.SERVER_URL + "/api/patch/category", {
       category: String(category),
@@ -169,6 +177,8 @@ function App() {
   function updatePriority(id, priority) {
     console.log(id, priority);
 
+    
+
     Axios.patch(settings.SERVER_URL + "/api/patch/priority", {
       priority: priority,
       id: id,
@@ -182,6 +192,12 @@ function App() {
 
   const deleteIssue = (event) => {
     console.log(event);
+
+    if (!loggedIn){
+      alert("Du måste vara inloggad för att uppdatera");
+      return;
+    }
+
     Axios.post(settings.SERVER_URL + "/api/delete/issue", {
       id: event,
     }).then(() => {
@@ -198,6 +214,9 @@ function App() {
   });
 
   const handleSubmit = (event) => {
+
+    
+
     const form = event.currentTarget;
     event.preventDefault();
     if (form.checkValidity() === false) {
@@ -211,6 +230,8 @@ function App() {
   };
 
   const handleUpdate = (event) => {
+
+    
     const form = event.currentTarget;
     event.preventDefault();
     if (form.checkValidity() === false) {
@@ -224,6 +245,11 @@ function App() {
   };
 
   const submitIssue = () => {
+
+    if (!loggedIn){
+      alert("Du måste vara inloggad för att uppdatera");
+      return;
+    }
     console.log("försöker skicka");
 
     Axios.post(settings.SERVER_URL + "/api/createIssue", {
@@ -248,6 +274,12 @@ function App() {
   };
 
   function submitUpdate() {
+
+    if (!loggedIn){
+      alert("Du måste vara inloggad för att uppdatera");
+      return;
+    }
+
     console.log("update sent");
     Axios.patch(settings.SERVER_URL + "/api/patch/issue", {
       issue: issueUpdate.issue,
@@ -421,11 +453,11 @@ function App() {
         );
 
         const time = new Date(val.timestamp).toLocaleString("sv-SE");
-        console.log(val.id, val.priority)
+        // console.log(val.id, val.priority)
 
         if(val.priority != ""){
           var priorityText = "Prioritet: " + priorityList[val.priority].text;
-          console.log("Prioritet id", val.id, " = ", priorityText)
+          // console.log("Prioritet id", val.id, " = ", priorityText)
           var priorityBadgeBg = classNames(
             {
               "secondary": val.priority === "0",
