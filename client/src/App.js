@@ -44,11 +44,17 @@ function App() {
     priority: ""
   });
 
+  // var priorityList = [
+  //   "Inte Specificerad",
+  //   "Låg",
+  //   "Medel",
+  //   "Hög"
+  // ];
   var priorityList = [
-    "Inte Specificerad",
-    "Låg",
-    "Medel",
-    "Hög"
+    {text: "Inte Specificerad", value: 0},
+    {text: "Låg", value: 1},
+    {text: "Medel", value: 2},
+    {text: "Hög", value: 3}
   ];
 
   const debug = true;
@@ -79,10 +85,18 @@ function App() {
     );
   });
 
-  const priorities = priorityArray.map((item) => {
+  // const priorities = priorityArray.map((item) => {
+  //   return (
+  //     <option key={item} value={item}>
+  //       {item}
+  //     </option>
+  //   );
+  // });
+
+  const priorities = priorityList.map((item) => {
     return (
-      <option key={item} value={item}>
-        {item}
+      <option key={item.value} value={item.value}>
+        {item.text}
       </option>
     );
   });
@@ -454,13 +468,14 @@ function App() {
         console.log(val.id, val.priority)
 
         if(val.priority != ""){
-          var priorityText = "Prioritet: " + priorityList[val.priority];
+          var priorityText = "Prioritet: " + priorityList[val.priority].text;
+          console.log("Prioritet id", val.id, " = ", priorityText)
           var priorityBadgeBg = classNames(
             {
-              "secondary": val.priority === 0,
-              "info": val.priority === 1,
-              "warning": val.priority === 2,
-              "danger": val.priority === 3
+              "secondary": val.priority === "0",
+              "info": val.priority === "1",
+              "warning": val.priority === "2",
+              "danger": val.priority === "3"
             },
             "mx-1"
           )
