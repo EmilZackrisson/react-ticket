@@ -64,13 +64,6 @@ function App() {
     "Övrigt",
   ];
 
-  const priorityArray = [
-    "Välj prioritet",
-    "Hög",
-    "Medel",
-    "Låg"
-  ];
-
   const categories = categoriesArray.map((item) => {
     return (
       <option key={item} value={item}>
