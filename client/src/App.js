@@ -19,6 +19,7 @@ import classNames from "classnames";
 import settings from "./settings.json"; // Set server url here
 // import Navbar from "./Navbar";
 import lastActive from "./lastActive";
+import AutoLinkText from 'react-autolink-text2';
 
 import "bootstrap/dist/css/bootstrap.min.css";
 
@@ -83,6 +84,8 @@ function App() {
 
   useEffect(() => {
     const loggedIn = localStorage.getItem("user");
+    const changedIssueStorage = localStorage.getItem("changedIssue");
+    const changedIssue = JSON.parse(changedIssueStorage);
     if (loggedIn) {
       const loggedInUser = JSON.parse(loggedIn);
       // setUser(foundUser);
@@ -114,6 +117,10 @@ function App() {
       setNavButtonLink("/login");
       setNavButtonText("Logga in");
       setNavHello("Hej Världen!");
+    }
+    if(changedIssue){
+      // document.getElementById(changedIssue.id).scrollIntoView();
+      localStorage.removeItem('changedIssue');
     }
 
     Axios.get(settings.SERVER_URL + "/api/get")
@@ -288,6 +295,8 @@ function App() {
       updater: username,
     }).then(() => {
       updateList();
+      localStorage.setItem("changedIssue", JSON.stringify({id: issueUpdate.id}));
+      
     });
   }
 
@@ -496,12 +505,13 @@ function App() {
         
         
         
+        
 
         // var issue = val.issue;
 
         return (
           // Issues cards are placed here
-          <div id="issuesCards" key={val.id}>
+          <div id={val.id} key={val.id}>
             <Card className={issueCardClasses}>
               <Card.Body>
                 <Card.Title>
@@ -510,7 +520,9 @@ function App() {
                   {val.category} | {time} 
                   <Badge bg={priorityBadgeBg}>{priorityText}</Badge>
                 </Card.Title>
-                <Card.Text>{issue}</Card.Text>
+                <Card.Text>
+                  <AutoLinkText text={issue} />
+                </Card.Text>
                 <Form onSubmit={handleUpdate}>
                   <FormGroup controlId="validationUpdate">
                     <Form.Label>Uppdatera problem {updated} av {updater}</Form.Label>
