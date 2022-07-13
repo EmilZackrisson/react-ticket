@@ -44,12 +44,6 @@ function App() {
     priority: ""
   });
 
-  // var priorityList = [
-  //   "Inte Specificerad",
-  //   "Låg",
-  //   "Medel",
-  //   "Hög"
-  // ];
   var priorityList = [
     {text: "Inte Specificerad", value: 0},
     {text: "Låg", value: 1},
@@ -85,13 +79,6 @@ function App() {
     );
   });
 
-  // const priorities = priorityArray.map((item) => {
-  //   return (
-  //     <option key={item} value={item}>
-  //       {item}
-  //     </option>
-  //   );
-  // });
 
   const priorities = priorityList.map((item) => {
     return (
@@ -161,12 +148,10 @@ function App() {
       console.log(id, completeStatus);
     }
 
-    // console.log(id, completeStatus);
     Axios.post(settings.SERVER_URL + "/api/patch/complete", {
       complete: Number(completeStatus),
       id: id,
     }).then(() => {
-      // setIssuesList([...issuesList, { senderName: senderName, issue: issue, complete: complete }])
       updateList();
       if (debug) {
         console.log("update complete ran");
@@ -177,12 +162,10 @@ function App() {
   function updateCategory(id, category) {
     console.log(id, category);
 
-    // console.log(id, category);
     Axios.patch(settings.SERVER_URL + "/api/patch/category", {
       category: String(category),
       id: id,
     }).then(() => {
-      // setIssuesList([...issuesList, { senderName: senderName, issue: issue, complete: complete }])
       updateList();
       if (debug) {
         console.log("update category ran");
@@ -193,12 +176,10 @@ function App() {
   function updatePriority(id, priority) {
     console.log(id, priority);
 
-    // console.log(id, category);
     Axios.patch(settings.SERVER_URL + "/api/patch/priority", {
       priority: priority,
       id: id,
     }).then(() => {
-      // setIssuesList([...issuesList, { senderName: senderName, issue: issue, complete: complete }])
       updateList();
       if (debug) {
         console.log("update priority ran");
@@ -206,13 +187,11 @@ function App() {
     });
   }
 
-  // const handleSubmit = (event) =>
   const deleteIssue = (event) => {
     console.log(event);
     Axios.post(settings.SERVER_URL + "/api/delete/issue", {
       id: event,
     }).then(() => {
-      // setIssuesList([...issuesList, { senderName: senderName, issue: issue, complete: complete }])
       updateList();
     });
   };
@@ -236,7 +215,6 @@ function App() {
 
     setValidated(true);
     submitIssue();
-    // testSubmit();
   };
 
   const handleUpdate = (event) => {
@@ -266,9 +244,6 @@ function App() {
       .then(() => {
         console.log("successfully sended issue to server");
         window.location.reload(false);
-        //   setIssuesList([...issuesList, { senderName: senderName, senderEmail: senderEmail, issue: issue, complete: 0 }]);
-        //   setTimeout(50);
-        //   updateList();
       })
       .catch((error) => {
         console.log("det gick inte att skicka");
@@ -287,21 +262,9 @@ function App() {
       category: issueUpdate.category,
       updater: username,
     }).then(() => {
-      // setIssuesList([...issuesList, { senderName: senderName, issue: issue, complete: complete }])
       updateList();
     });
   }
-
-  // function submitUpdateCategory(list) {
-  //   console.log("update sent");
-  //   Axios.patch(settings.SERVER_URL + "/api/patch/category", {
-  //     category: issueUpdate.category,
-  //     id: issueUpdate.id,
-  //   }).then(() => {
-  //     // setIssuesList([...issuesList, { senderName: senderName, issue: issue, complete: complete }])
-  //     updateList();
-  //   });
-  // }
 
   return (
     <>
