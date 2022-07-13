@@ -13,18 +13,17 @@ import {
   Container,
   Nav,
   Navbar,
-  Badge
+  Badge,
 } from "react-bootstrap";
 import classNames from "classnames";
 import settings from "./settings.json"; // Set server url here
 // import Navbar from "./Navbar";
 import lastActive from "./lastActive";
-import AutoLinkText from 'react-autolink-text2';
+import Linkify from "react-linkify";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 
 function App() {
-
   const serverUrl = localStorage.getItem("serverUrl");
 
   const [issuesList, setIssuesList] = useState([]);
@@ -42,14 +41,14 @@ function App() {
     email: "",
     issue: "",
     category: "",
-    priority: ""
+    priority: "",
   });
 
   var priorityList = [
-    {text: "Inte Specificerad", value: 0},
-    {text: "Låg", value: 1},
-    {text: "Medel", value: 2},
-    {text: "Hög", value: 3}
+    { text: "Inte Specificerad", value: 0 },
+    { text: "Låg", value: 1 },
+    { text: "Medel", value: 2 },
+    { text: "Hög", value: 3 },
   ];
 
   const debug = true;
@@ -72,7 +71,6 @@ function App() {
       </option>
     );
   });
-
 
   const priorities = priorityList.map((item) => {
     return (
@@ -108,7 +106,6 @@ function App() {
         email: loggedInUser.email,
       });
 
-
       // For debug
       console.log("Username:", loggedInUser.name);
       console.log("email: ", loggedInUser.email);
@@ -118,9 +115,9 @@ function App() {
       setNavButtonText("Logga in");
       setNavHello("Hej Världen!");
     }
-    if(changedIssue){
+    if (changedIssue) {
       // document.getElementById(changedIssue.id).scrollIntoView();
-      localStorage.removeItem('changedIssue');
+      localStorage.removeItem("changedIssue");
     }
 
     Axios.get(settings.SERVER_URL + "/api/get")
@@ -147,7 +144,7 @@ function App() {
     if (debug) {
       console.log(id, completeStatus);
     }
-    if (!loggedIn){
+    if (!loggedIn) {
       alert("Du måste vara inloggad för att uppdatera");
       return;
     }
@@ -165,7 +162,7 @@ function App() {
 
   function updateCategory(id, category) {
     console.log(id, category);
-    if (!loggedIn){
+    if (!loggedIn) {
       alert("Du måste vara inloggad för att uppdatera");
       return;
     }
@@ -184,8 +181,6 @@ function App() {
   function updatePriority(id, priority) {
     console.log(id, priority);
 
-    
-
     Axios.patch(settings.SERVER_URL + "/api/patch/priority", {
       priority: priority,
       id: id,
@@ -200,7 +195,7 @@ function App() {
   const deleteIssue = (event) => {
     console.log(event);
 
-    if (!loggedIn){
+    if (!loggedIn) {
       alert("Du måste vara inloggad för att uppdatera");
       return;
     }
@@ -221,9 +216,6 @@ function App() {
   });
 
   const handleSubmit = (event) => {
-
-    
-
     const form = event.currentTarget;
     event.preventDefault();
     if (form.checkValidity() === false) {
@@ -237,8 +229,6 @@ function App() {
   };
 
   const handleUpdate = (event) => {
-
-    
     const form = event.currentTarget;
     event.preventDefault();
     if (form.checkValidity() === false) {
@@ -252,8 +242,7 @@ function App() {
   };
 
   const submitIssue = () => {
-
-    if (!loggedIn){
+    if (!loggedIn) {
       alert("Du måste vara inloggad för att uppdatera");
       return;
     }
@@ -281,8 +270,7 @@ function App() {
   };
 
   function submitUpdate() {
-
-    if (!loggedIn){
+    if (!loggedIn) {
       alert("Du måste vara inloggad för att uppdatera");
       return;
     }
@@ -295,8 +283,10 @@ function App() {
       updater: username,
     }).then(() => {
       updateList();
-      localStorage.setItem("changedIssue", JSON.stringify({id: issueUpdate.id}));
-      
+      localStorage.setItem(
+        "changedIssue",
+        JSON.stringify({ id: issueUpdate.id })
+      );
     });
   }
 
@@ -446,8 +436,6 @@ function App() {
         {/* <Button onClick={testSend}>Testa</Button> */}
       </Form>
 
-      
-
       {issuesList.map((val) => {
         // console.log(val);
 
@@ -464,48 +452,44 @@ function App() {
         const time = new Date(val.timestamp).toLocaleString("sv-SE");
         // console.log(val.id, val.priority)
 
-        if(val.priority != ""){
+        if (val.priority != "") {
           var priorityText = "Prioritet: " + priorityList[val.priority].text;
           // console.log("Prioritet id", val.id, " = ", priorityText)
           var priorityBadgeBg = classNames(
             {
-              "secondary": val.priority === "0",
-              "info": val.priority === "1",
-              "warning": val.priority === "2",
-              "danger": val.priority === "3"
+              secondary: val.priority === "0",
+              info: val.priority === "1",
+              warning: val.priority === "2",
+              danger: val.priority === "3",
             },
             "mx-1"
-          )
+          );
         }
-   
-
 
         // Check if issue is JSON
-        try {  
-          var issueJson = JSON.parse(val.issue)
+        try {
+          var issueJson = JSON.parse(val.issue);
           const issueLength = issueJson.length;
-          console.log(issueJson)
+          console.log(issueJson);
 
           // console.log("längd: ",issueLength);
 
-          if(issueLength > 1){ // Om problem har blivit uppdaterat
-            const timeUpdated = new Date(issueJson[issueLength-1].timestamp).toLocaleString("sv-SE");
+          if (issueLength > 1) {
+            // Om problem har blivit uppdaterat
+            const timeUpdated = new Date(
+              issueJson[issueLength - 1].timestamp
+            ).toLocaleString("sv-SE");
             var updated = "| Uppdaterades den " + timeUpdated;
 
-            var issue = issueJson[issueLength-1].issue;
-            var updater = issueJson[issueLength-1].updater;
-            
-          } else{
+            var issue = issueJson[issueLength - 1].issue;
+            var updater = issueJson[issueLength - 1].updater;
+          } else {
             var issue = issueJson.issue;
           }
-        } catch (e) {  
+        } catch (e) {
           var issue = val.issue;
           const updated = "";
         }
-        
-        
-        
-        
 
         // var issue = val.issue;
 
@@ -517,15 +501,17 @@ function App() {
                 <Card.Title>
                   #{val.id} | {val.senderName}{" "}
                   <a href={"mailto:" + val.senderEmail}>{val.senderEmail}</a> |{" "}
-                  {val.category} | {time} 
+                  {val.category} | {time}
                   <Badge bg={priorityBadgeBg}>{priorityText}</Badge>
                 </Card.Title>
                 <Card.Text>
-                  <AutoLinkText text={issue} />
+                  <Linkify>{issue}</Linkify>
                 </Card.Text>
                 <Form onSubmit={handleUpdate}>
                   <FormGroup controlId="validationUpdate">
-                    <Form.Label>Uppdatera problem {updated} av {updater}</Form.Label>
+                    <Form.Label>
+                      Uppdatera problem {updated} av {updater}
+                    </Form.Label>
                     <Form.Control
                       type="text"
                       placeholder="Problem"
