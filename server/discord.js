@@ -9,14 +9,25 @@ function sendNewIssue(message, sender, id) {
     hook.setUsername('react-ticket');
     // hook.setAvatar(IMAGE_URL);
 
-    const title = "#" + id + " | " + message;
+    // Check if issue is JSON
+    try {
+        var issueJson = JSON.parse(message);
+        const issueLength = issueJson.length;
+        console.log(issueJson);
+
+        var issue = issueJson.issue;
+      } catch (e) {
+        var issue = val.issue;
+      }
+
+    const title = "#" + id + " | " + issue;
     const field = "#" + id + "";
 
     const embed = new MessageBuilder()
         .setTitle(title)
         .setAuthor(sender)
         .setURL(process.env.REACT_TICKET_URL)
-        .addField(field, message) //Problem
+        .addField(field, issue) //Problem
         // .addField('Second field', 'this is not inline')
         .setColor('#ff0000')
         // .setThumbnail('https://cdn.discordapp.com/embed/avatars/0.png')
