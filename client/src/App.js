@@ -27,6 +27,12 @@ function App() {
   const serverUrl = localStorage.getItem("serverUrl");
 
   const [issuesList, setIssuesList] = useState([]);
+  const [issuesListSorted, setIssuesListSorted] = useState({
+    high: [],
+    moderate: [],
+    low: [],
+    notSpecified: [],
+  });
 
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
@@ -120,6 +126,8 @@ function App() {
       localStorage.removeItem("changedIssue");
     }
 
+    
+
     Axios.get(settings.SERVER_URL + "/api/get")
       .then((response) => {
         setIssuesList(response.data);
@@ -128,6 +136,44 @@ function App() {
         console.log(error);
       });
   }, []);
+
+
+  useEffect(() => {
+
+    issuesList.map((val) => {
+      console.log("populateSortedIssueList", val)
+
+      try {
+        var issueJson = JSON.parse(val.issue);
+        const issueLength = issueJson.length;
+        console.log(issueJson);
+
+        // console.log("längd: ",issueLength);
+
+        if (issueLength > 1) {
+          // Om problem har blivit uppdaterat
+          const timeUpdated = new Date(
+            issueJson[issueLength - 1].timestamp
+          ).toLocaleString("sv-SE");
+          var updated = "| Uppdaterades den " + timeUpdated;
+
+          var issue = issueJson[issueLength - 1].issue;
+          var updater = issueJson[issueLength - 1].updater;
+        } else {
+          var issue = issueJson.issue;
+        }
+      } catch (e) {
+        var issue = val.issue;
+        const updated = "";
+      }
+
+      if(val.priority === 3){
+        setIssuesListSorted(...issuesListSorted, val)
+        console.log("Sorterad lista: ", issuesListSorted);
+      }
+
+    })
+  }, [issuesList])
 
   const updateList = () => {
     console.log("updating list");
