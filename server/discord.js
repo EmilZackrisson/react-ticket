@@ -44,7 +44,18 @@ function sendChangedIssue(message, sender, id) {
     hook.setUsername('react-ticket');
     // hook.setAvatar(IMAGE_URL);
 
-    const title = "#" + id + " | " + message;
+    // Check if issue is JSON
+    try {
+        var issueJson = JSON.parse(message);
+        const issueLength = issueJson.length;
+        console.log(issueJson);
+
+        var issue = issueJson.issue;
+      } catch (e) {
+        var issue = val.issue;
+      }
+
+    const title = "#" + id + " | " + issue;
     const field = "#" + id + "";
 
     const embed = new MessageBuilder()
@@ -68,7 +79,18 @@ function sendCompleted(message, sender, id) {
     hook.setUsername('react-ticket');
     // hook.setAvatar(IMAGE_URL);
 
-    const title = "#" + id + " | " + message;
+    // Check if issue is JSON
+    try {
+        var issueJson = JSON.parse(message);
+        const issueLength = issueJson.length;
+        console.log(issueJson);
+
+        var issue = issueJson.issue;
+      } catch (e) {
+        var issue = val.issue;
+      }
+
+    const title = "#" + id + " | " + issue;
     const field = "#" + id + "";
 
     const embed = new MessageBuilder()
@@ -92,7 +114,18 @@ function sendNotCompleted(message, sender, id) {
     hook.setUsername('react-ticket');
     // hook.setAvatar(IMAGE_URL);
 
-    const title = "#" + id + " | " + message;
+    // Check if issue is JSON
+    try {
+        var issueJson = JSON.parse(message);
+        const issueLength = issueJson.length;
+        console.log(issueJson);
+
+        var issue = issueJson.issue;
+      } catch (e) {
+        var issue = val.issue;
+      }
+
+    const title = "#" + id + " | " + issue;
     const field = "#" + id + "";
 
     const embed = new MessageBuilder()

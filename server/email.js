@@ -6,7 +6,15 @@ function sendNewIssue(issueObj) {
 
     const name = issueObj.senderName;
     const email = issueObj.senderEmail;
-    const issue = issueObj.issue;
+    try {
+        var issueJson = JSON.parse(issueObj.issue);
+        const issueLength = issueJson.length;
+        console.log(issueJson);
+
+        var issue = issueJson.issue;
+      } catch (e) {
+        var issue = val.issue;
+      }
     const id = issueObj.id;
     const subject = "Nytt problem - #" + id;
     const content = "<body><h1>Nytt problem #" + id + "</h1><h3>Rapporterad av " + name + " | <a href:mailto=" + email + ">" + email + "</a></h3><p>" + issue + "</p></body>"
@@ -42,7 +50,17 @@ function sendNewIssue(issueObj) {
 function issueSolved(issueObj){
     const name = issueObj.senderName;
     const email = issueObj.senderEmail;
-    const issue = issueObj.issue;
+
+    try {
+        var issueJson = JSON.parse(issueObj.issue);
+        const issueLength = issueJson.length;
+        console.log(issueJson);
+
+        var issue = issueJson.issue;
+      } catch (e) {
+        var issue = val.issue;
+      }
+
     const id = issueObj.id;
     const subject = "Nytt problem - #" + id;
     const content = "<body><h1>Problem löst #" + id + "</h1><h3>Rapporterad av " + name + " | <a href:mailto=" + email + ">" + email + "</a></h3><p>" + issue + "</p></body>"
@@ -78,7 +96,15 @@ function issueSolved(issueObj){
 function issueChanged(issueObj){
     const name = issueObj.senderName;
     const email = issueObj.senderEmail;
-    const issue = issueObj.issue;
+    try {
+        var issueJson = JSON.parse(issueObj.issue);
+        const issueLength = issueJson.length;
+        console.log(issueJson);
+
+        var issue = issueJson.issue;
+      } catch (e) {
+        var issue = val.issue;
+      }
     const id = issueObj.id;
     const subject = "Nytt problem - #" + id;
     const content = "<body><h1>Problem uppdaterat #" + id + "</h1><h3>Rapporterad av " + name + " | <a href:mailto=" + email + ">" + email + "</a></h3><p>" + issue + "</p></body>"
