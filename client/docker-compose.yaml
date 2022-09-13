@@ -3,7 +3,7 @@ services:
   react-ticket-client:
     build:
       context: .
-      dockerfile: 'Dockerfile'
+      dockerfile: 'dockerfile'
     ports:
       - '3000:80'
     volumes:
