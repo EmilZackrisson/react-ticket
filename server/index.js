@@ -23,8 +23,8 @@ const db = mysql.createPool({
 });
 
 const httpsOptions = {
-  cert: fs.readFileSync(path.join(__dirname, "ssl", "emilzackrisson.tk.crt")),
-  key: fs.readFileSync(path.join(__dirname, "ssl", "emilzackrisson.tk.key")),
+  cert: fs.readFileSync(path.join(__dirname, "ssl", "emilzackrisson.se.crt")),
+  key: fs.readFileSync(path.join(__dirname, "ssl", "emilzackrisson.se.key")),
 };
 
 // app.use(express.json());
@@ -52,7 +52,7 @@ app.get("/api/get", (req, res) => {
   const sqlSelect = "SELECT * FROM tickets ORDER BY priority DESC";
   console.log("got get req");
   db.query(sqlSelect, (err, result) => {
-    res.header("Access-Control-Allow-Origin", "*");
+    
     res.send(result);
     if (err) {
       console.log(err);
@@ -63,7 +63,7 @@ app.get("/api/get", (req, res) => {
 app.get("/api/listUsers", (req, res) => {
   const sqlSelect = "SELECT * FROM users";
   db.query(sqlSelect, (err, result) => {
-    res.header("Access-Control-Allow-Origin", "*");
+    
     res.send(result);
     if (err) {
       console.log(err);
@@ -79,7 +79,7 @@ app.post("/api/user", (req, res) => {
     "SELECT * FROM users WHERE email = " + db.escape(email) + ";";
   db.query(sqlSelect, [values], (err, result) => {
     // console.log(result);
-    res.header("Access-Control-Allow-Origin", "*");
+    
     res.send(result);
     console.log("got user on request: ", result);
     if (err) {
@@ -122,11 +122,11 @@ app.post("/api/userActive", (req, res) => {
         // console.log(result);
         if (err) {
             console.log(err);
-            res.header("Access-Control-Allow-Origin", "*");
+            
             res.sendStatus(500);
         }
         else{
-          res.header("Access-Control-Allow-Origin", "*");
+          
             res.sendStatus(200);
         }
     })
@@ -146,7 +146,7 @@ app.post("/api/user/add", (req, res) => {
     "INSERT INTO users (name, email, hash, permissionlevel, timeCreated) VALUES(?);";
   db.query(sqlSelect, [values], (err, result) => {
     // console.log(result);
-    res.header("Access-Control-Allow-Origin", "*");
+    
     res.send(result);
     console.log("added user: ", result);
     if (err) {
@@ -172,7 +172,7 @@ app.post("/api/createIssue", (req, res) => {
   console.log(req.body);
 
   if ((senderName == "") | (issue == "") | (email == "")) {
-    res.header("Access-Control-Allow-Origin", "*");
+    
     res.sendStatus(406).send("Not Acceptable");
     return;
   }
@@ -201,7 +201,7 @@ app.post("/api/createIssue", (req, res) => {
       // res.send("error från server");
     } else {
       console.log("new issue reported and inserted");
-      res.header("Access-Control-Allow-Origin", "*");
+      
       res.sendStatus(200);
       notifyNewIssue();
     }
