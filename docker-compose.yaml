@@ -1,9 +1,0 @@
-services:
-  server:
-    image: react-ticket-server
-    ports:
-      - "3001:3001"
-  client:
-    image: react-ticket-client
-    ports:
-      - "3000:3000"
