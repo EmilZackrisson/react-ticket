@@ -1,0 +1,9 @@
+version: '3.7'
+services:
+  react-ticket-server:
+    container_name: ReactTicketServer
+    build:
+      context: .
+      dockerfile: dockerfile
+    ports:
+      - '3001:3001'
