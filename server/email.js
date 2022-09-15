@@ -13,7 +13,7 @@ function sendNewIssue(issueObj) {
     const subject = "Nytt problem - #" + id;
     const content = "<body><h1>Nytt problem #" + id + "</h1><h3>Rapporterad av " + name + " | <a href:mailto=" + email + ">" + email + "</a></h3><p>" + issue + "</p></body>"
 
-    if(email !== process.env.ADMIN_EMAIL){
+    if(email != process.env.ADMIN_EMAIL){
         var to = [
             {
                 "email": email,
@@ -64,7 +64,7 @@ function issueSolved(issueObj){
     const subject = "Nytt problem - #" + id;
     const content = "<body><h1>Problem löst #" + id + "</h1><h3>Rapporterad av " + name + " | <a href:mailto=" + email + ">" + email + "</a></h3><p>" + issue + "</p></body>"
 
-    if(email !== process.env.ADMIN_EMAIL){
+    if(email != process.env.ADMIN_EMAIL){
         var to = [
             {
                 "email": email,
@@ -115,7 +115,7 @@ function issueChanged(issueObj){
     const subject = "Nytt problem - #" + id;
     const content = "<body><h1>Problem uppdaterat #" + id + "</h1><h3>Rapporterad av " + name + " | <a href:mailto=" + email + ">" + email + "</a></h3><p>" + issue + "</p></body>"
 
-    if(email !== process.env.ADMIN_EMAIL){
+    if(email != process.env.ADMIN_EMAIL){
         var to = [
             {
                 "email": email,
