@@ -104,4 +104,4 @@ function sendNotCompleted(notCompletedIssue) {
 
 
 
-module.exports = { sendNewissue, sendCompleted, sendNotCompleted, sendChangedissue };
+module.exports = { sendNewIssue, sendCompleted, sendNotCompleted, sendChangedIssue };
