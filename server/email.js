@@ -1,4 +1,5 @@
 const axios = require('axios');
+require("dotenv").config();
 
 
 function sendNewIssue(issueObj) {
@@ -11,6 +12,26 @@ function sendNewIssue(issueObj) {
     const subject = "Nytt problem - #" + id;
     const content = "<body><h1>Nytt problem #" + id + "</h1><h3>Rapporterad av " + name + " | <a href:mailto=" + email + ">" + email + "</a></h3><p>" + issue + "</p></body>"
 
+    if(senderEmail != process.env.ADMIN_EMAIL){
+        var to = [
+            {
+                "email": email,
+                "name": name
+            },
+            {
+                "email": process.env.ADMIN_EMAIL,
+                "name": process.env.ADMIN_NAME
+            }
+        ]
+    } else{
+        var to = [
+            {
+                "email": email,
+                "name": name
+            }
+        ]
+    }
+
     console.log("sending email");
     const response = axios.post(
         'https://api.sendinblue.com/v3/smtp/email',
@@ -20,12 +41,7 @@ function sendNewIssue(issueObj) {
                 'name': 'React Ticket',
                 'email': process.env.SMTP_ADDRESS
             },
-            'to': [
-                {
-                    'email': email,
-                    'name': name
-                }
-            ],
+            'to': to,
             'subject': subject,
             'htmlContent': content
         },
@@ -47,6 +63,26 @@ function issueSolved(issueObj){
     const subject = "Nytt problem - #" + id;
     const content = "<body><h1>Problem löst #" + id + "</h1><h3>Rapporterad av " + name + " | <a href:mailto=" + email + ">" + email + "</a></h3><p>" + issue + "</p></body>"
 
+    if(senderEmail != process.env.ADMIN_EMAIL){
+        var to = [
+            {
+                "email": email,
+                "name": name
+            },
+            {
+                "email": process.env.ADMIN_EMAIL,
+                "name": process.env.ADMIN_NAME
+            }
+        ]
+    } else{
+        var to = [
+            {
+                "email": email,
+                "name": name
+            }
+        ]
+    }
+
     console.log("sending email");
     const response = axios.post(
         'https://api.sendinblue.com/v3/smtp/email',
@@ -56,12 +92,7 @@ function issueSolved(issueObj){
                 'name': 'React Ticket',
                 'email': process.env.SMTP_ADDRESS
             },
-            'to': [
-                {
-                    'email': email,
-                    'name': name
-                }
-            ],
+            'to': to,
             'subject': subject,
             'htmlContent': content
         },
@@ -83,6 +114,26 @@ function issueChanged(issueObj){
     const subject = "Nytt problem - #" + id;
     const content = "<body><h1>Problem uppdaterat #" + id + "</h1><h3>Rapporterad av " + name + " | <a href:mailto=" + email + ">" + email + "</a></h3><p>" + issue + "</p></body>"
 
+    if(senderEmail != process.env.ADMIN_EMAIL){
+        var to = [
+            {
+                "email": email,
+                "name": name
+            },
+            {
+                "email": process.env.ADMIN_EMAIL,
+                "name": process.env.ADMIN_NAME
+            }
+        ]
+    } else{
+        var to = [
+            {
+                "email": email,
+                "name": name
+            }
+        ]
+    }
+
     console.log("sending email");
     const response = axios.post(
         'https://api.sendinblue.com/v3/smtp/email',
@@ -92,12 +143,7 @@ function issueChanged(issueObj){
                 'name': 'React Ticket',
                 'email': process.env.SMTP_ADDRESS
             },
-            'to': [
-                {
-                    'email': email,
-                    'name': name
-                }
-            ],
+            'to': to,
             'subject': subject,
             'htmlContent': content
         },

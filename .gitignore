@@ -4,6 +4,7 @@ react-ticket-client.tar
 react-ticket-server.tar
 server/.env
 .env
+settings.json
 client/build/asset-manifest.json
 client/build/favicon.ico
 client/build/index.html
