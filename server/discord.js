@@ -11,8 +11,8 @@ function sendNewIssue(newestIssue) {
     const issue = newestIssue.issue;
     const senderName = newestIssue.SenderName;
 
-    const title = "#" + id + " | " + issue;
-    const field = "#" + id + "";
+    const title = "#" + newestIssue.id + " | " + issue;
+    const field = "#" + newestIssue.id + "";
 
     const embed = new MessageBuilder()
         .setTitle(title)
@@ -35,8 +35,8 @@ function sendChangedIssue(newestIssue) {
     hook.setUsername('react-ticket');
     // hook.setAvatar(IMAGE_URL);
 
-    const title = "#" + id + " | " + newestIssue.Issue;
-    const field = "#" + id + "";
+    const title = "#" + newestIssue.id + " | " + newestIssue.Issue;
+    const field = "#" + newestIssue.id + "";
 
     const embed = new MessageBuilder()
         .setTitle(title)
@@ -59,8 +59,8 @@ function sendCompleted(newestIssue) {
     hook.setUsername('react-ticket');
     // hook.setAvatar(IMAGE_URL);
 
-    const title = "#" + id + " | " + newestIssue.Issue;
-    const field = "#" + id + "";
+    const title = "#" + newestIssue.id + " | " + newestIssue.Issue;
+    const field = "#" + newestIssue.id + "";
 
     const embed = new MessageBuilder()
         .setTitle(title)
@@ -83,8 +83,8 @@ function sendNotCompleted(newestIssue) {
     hook.setUsername('react-ticket');
     // hook.setAvatar(IMAGE_URL);
 
-    const title = "#" + id + " | " + newestIssue.Issue;
-    const field = "#" + id + "";
+    const title = "#" + newestIssue.id + " | " + newestIssue.Issue;
+    const field = "#" + newestIssue.id + "";
 
     const embed = new MessageBuilder()
         .setTitle(title)
