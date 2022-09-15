@@ -24,7 +24,7 @@ import Linkify from "react-linkify";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 function App() {
-  const serverUrl = localStorage.getItem("serverUrl");
+  // const serverUrl = localStorage.getItem("serverUrl");
 
   const [issuesList, setIssuesList] = useState([]);
 
@@ -452,7 +452,7 @@ function App() {
         const time = new Date(val.timestamp).toLocaleString("sv-SE");
         // console.log(val.id, val.priority)
 
-        if (val.priority != "") {
+        if (val.priority !== "") {
           var priorityText = "Prioritet: " + priorityList[val.priority].text;
           // console.log("Prioritet id", val.id, " = ", priorityText)
           var priorityBadgeBg = classNames(
@@ -488,7 +488,7 @@ function App() {
           }
         } catch (e) {
           var issue = val.issue;
-          const updated = "";
+          // const updated = "";
         }
 
         // var issue = val.issue;
