@@ -4,7 +4,7 @@ require('dotenv').config()
 const hook = new Webhook(process.env.DISCORD_WEBHOOK);
 
 
-function sendNewissue(newIssue) {
+function sendNewIssue(newIssue) {
     // const IMAGE_URL = 'https://homepages.cae.wisc.edu/~ece533/images/airplane.png';
     hook.setUsername('react-ticket');
     // hook.setAvatar(IMAGE_URL);
@@ -30,7 +30,7 @@ function sendNewissue(newIssue) {
     hook.send(embed);
 }
 
-function sendChangedissue(changedIssue) {
+function sendChangedIssue(changedIssue) {
     // const IMAGE_URL = 'https://homepages.cae.wisc.edu/~ece533/images/airplane.png';
     hook.setUsername('react-ticket');
     // hook.setAvatar(IMAGE_URL);
