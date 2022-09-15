@@ -400,11 +400,7 @@ function notifyNewIssue() {
     console.table(newestIssue);
 
     email.sendNewIssue(newestIssue);
-    discord.sendNewIssue(
-      newestIssue.issue,
-      newestIssue.senderName,
-      newestIssue.id
-    );
+    discord.sendNewIssue(newestIssue);
   });
 }
 
@@ -416,7 +412,7 @@ function notifySolvedIssue(id, complete) {
       // console.log(newestIssue.id);
       // console.log("Newest id: ", newestId)
 
-      discord.sendCompleted(solvedIssue.issue, solvedIssue.senderName, id);
+      discord.sendCompleted(newestIssue);
       email.issueSolved(solvedIssue);
     });
   }
@@ -427,7 +423,7 @@ function notifySolvedIssue(id, complete) {
       // console.log(newestIssue.id);
       // console.log("Newest id: ", newestId)
 
-      discord.sendNotCompleted(solvedIssue.issue, solvedIssue.senderName, id);
+      discord.sendNotCompleted(newestIssue);
     });
   }
 }
@@ -442,11 +438,7 @@ function notifyChangedIssue() {
     // console.log("Newest id: ", newestId)
 
     email.issueChanged(changedIssue);
-    discord.sendChangedIssue(
-      changedIssue.issue,
-      changedIssue.senderName,
-      changedIssue.id
-    );
+    discord.sendChangedIssue(newestIssue);
   });
 }
 
