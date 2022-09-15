@@ -4,12 +4,12 @@ require('dotenv').config()
 const hook = new Webhook(process.env.DISCORD_WEBHOOK);
 
 
-function sendNewissue(issue) {
+function sendNewissue(newIssue) {
     // const IMAGE_URL = 'https://homepages.cae.wisc.edu/~ece533/images/airplane.png';
     hook.setUsername('react-ticket');
     // hook.setAvatar(IMAGE_URL);
-    const issue = issue.issue;
-    const senderName = issue.SenderName;
+    const issue = newIssue.issue;
+    const senderName = newIssue.SenderName;
 
     const title = "#" + issue.id + " | " + issue;
     const field = "#" + issue.id + "";
@@ -30,19 +30,19 @@ function sendNewissue(issue) {
     hook.send(embed);
 }
 
-function sendChangedissue(issue) {
+function sendChangedissue(changedIssue) {
     // const IMAGE_URL = 'https://homepages.cae.wisc.edu/~ece533/images/airplane.png';
     hook.setUsername('react-ticket');
     // hook.setAvatar(IMAGE_URL);
 
-    const title = "#" + issue.id + " | " + issue.issue;
-    const field = "#" + issue.id + "";
+    const title = "#" + changedIssue.id + " | " + changedIssue.issue;
+    const field = "#" + changedIssue.id + "";
 
     const embed = new MessageBuilder()
         .setTitle(title)
-        .setAuthor(issue.issue)
+        .setAuthor(changedIssue.issue)
         .setURL(process.env.REACT_TICKET_URL)
-        .addField(field, issue.issue) //Problem
+        .addField(field, changedIssue.issue) //Problem
         // .addField('Second field', 'this is not inline')
         .setColor('#ff0000')
         // .setThumbnail('https://cdn.discordapp.com/embed/avatars/0.png')
@@ -54,19 +54,19 @@ function sendChangedissue(issue) {
     hook.send(embed);
 }
 
-function sendCompleted(issue) {
+function sendCompleted(completedIssue) {
     // const IMAGE_URL = 'https://homepages.cae.wisc.edu/~ece533/images/airplane.png';
     hook.setUsername('react-ticket');
     // hook.setAvatar(IMAGE_URL);
 
-    const title = "#" + issue.id + " | " + issue.issue;
-    const field = "#" + issue.id + "";
+    const title = "#" + completedIssue.id + " | " + completedIssue.issue;
+    const field = "#" + completedIssue.id + "";
 
     const embed = new MessageBuilder()
         .setTitle(title)
-        .setAuthor(issue.SenderName)
+        .setAuthor(completedIssue.SenderName)
         .setURL(process.env.REACT_TICKET_URL)
-        .addField(field, issue.issue) //Problem
+        .addField(field, completedIssue.issue) //Problem
         // .addField('Second field', 'this is not inline')
         .setColor('#00FF00')
         // .setThumbnail('https://cdn.discordapp.com/embed/avatars/0.png')
@@ -78,19 +78,19 @@ function sendCompleted(issue) {
     hook.send(embed);
 }
 
-function sendNotCompleted(issue) {
+function sendNotCompleted(notCompletedIssue) {
     // const IMAGE_URL = 'https://homepages.cae.wisc.edu/~ece533/images/airplane.png';
     hook.setUsername('react-ticket');
     // hook.setAvatar(IMAGE_URL);
 
-    const title = "#" + issue.id + " | " + issue.issue;
-    const field = "#" + issue.id + "";
+    const title = "#" + notCompletedIssue.id + " | " + notCompletedIssue.issue;
+    const field = "#" + notCompletedIssue.id + "";
 
     const embed = new MessageBuilder()
         .setTitle(title)
-        .setAuthor(issue.SenderName)
+        .setAuthor(notCompletedIssue.SenderName)
         .setURL(process.env.REACT_TICKET_URL)
-        .addField(field, issue.issue) //Problem
+        .addField(field, notCompletedIssue.issue) //Problem
         // .addField('Second field', 'this is not inline')
         .setColor('#ffa500')
         // .setThumbnail('https://cdn.discordapp.com/embed/avatars/0.png')
