@@ -423,7 +423,7 @@ function notifySolvedIssue(id, complete) {
       // console.log(newestIssue.id);
       // console.log("Newest id: ", newestId)
 
-      discord.sendNotCompleted(newestIssue);
+      discord.sendNotCompleted(solvedIssue);
     });
   }
 }
@@ -438,7 +438,7 @@ function notifyChangedIssue() {
     // console.log("Newest id: ", newestId)
 
     email.issueChanged(changedIssue);
-    discord.sendChangedIssue(newestIssue);
+    discord.sendChangedIssue(changedIssue);
   });
 }
 
