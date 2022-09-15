@@ -4,6 +4,7 @@ react-ticket-client.tar
 react-ticket-server.tar
 server/.env
 .env
+settings.json
 client/build/asset-manifest.json
 client/build/favicon.ico
 client/build/index.html
@@ -38,3 +39,4 @@ client/build/static/js/main.18392532.chunk.js
 client/build/static/js/main.18392532.chunk.js.map
 client/build/static/js/runtime~main.a8a9905a.js
 client/build/static/js/runtime~main.a8a9905a.js.map
+client/src/settings.json

@@ -8,8 +8,7 @@ import {
   Row,
   Alert,
   Navbar,
-  Container,
-  Modal,
+  Container
 } from "react-bootstrap";
 import settings from "./settings.json"; // Set server url here
 import bcrypt from "bcryptjs";
@@ -18,12 +17,12 @@ import bcrypt from "bcryptjs";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 function Login() {
-  const [username, setUsername] = useState("");
+  // const [username, setUsername] = useState("");
   const [navButtonLink, setNavButtonLink] = useState("");
   const [navButtonText, setNavButtonText] = useState("");
-  const [navUserState, setNavUserState] = useState("");
+  // const [navUserState, setNavUserState] = useState("");
   const [navHello, setNavHello] = useState("");
-  const [modalShow, setModalShow] = useState(false);
+  // const [modalShow, setModalShow] = useState(false);
 
   const [validated, setValidated] = useState(false);
 
@@ -129,14 +128,14 @@ function Login() {
         <Container className="container-fluid">
           <Navbar.Brand href="/">React Ticket</Navbar.Brand>
           <Navbar.Toggle />
-          <Navbar.Collapse className="justify-content-end">
+          {/* <Navbar.Collapse className="justify-content-end">
             <Navbar.Text className="m-2">
               {navUserState} {username}
             </Navbar.Text>
             <Button variant="primary" href={navButtonLink}>
               {navButtonText}
             </Button>
-          </Navbar.Collapse>
+          </Navbar.Collapse> */}
         </Container>
       </Navbar>
 

@@ -264,12 +264,12 @@ function Settings() {
 
         <h4 className="display-6 m-3 ">Alla användare</h4>
           {userList.map((val) => {
-            if(val.permissionlevel === 1){
-              const permissionLevelText = "1 - Användare";
-            }
-            if(val.permissionlevel === 3){
-              const permissionLevelText = "3 - Admin";
-            }
+            // if(val.permissionlevel === 1){
+            //   const permissionLevelText = "1 - Användare";
+            // }
+            // if(val.permissionlevel === 3){
+            //   const permissionLevelText = "3 - Admin";
+            // }
       
             const userCreated = new Date(val.timeCreated).toLocaleString("sv-SE")
             const userLastLogin = new Date(val.lastLogin).toLocaleString("sv-SE")
