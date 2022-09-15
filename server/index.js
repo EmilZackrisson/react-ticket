@@ -397,8 +397,9 @@ function notifyNewIssue() {
     // console.log(newestIssue.id);
     const newestId = newestIssue.id;
     console.log("Newest id: ", newestId);
+    console.table(newestIssue);
 
-    // email.sendNewIssue(newestIssue);
+    email.sendNewIssue(newestIssue);
     discord.sendNewIssue(
       newestIssue.issue,
       newestIssue.senderName,
