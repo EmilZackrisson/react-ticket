@@ -167,20 +167,20 @@ function issueChanged(issueObj){
 function test(issueObj) {
     // send email
 
-    const name = issueObj.senderName;
-    const email = issueObj.senderEmail;
+    // const name = issueObj.senderName;
+    // const email = issueObj.senderEmail;
     // const issue = issueObj.issue.issue;
-    const issue = JSON.parse(issueObj.issue);
+    // const issue = JSON.parse(issueObj.issue);
 
     const id = issueObj.id;
-    const subject = "Nytt problem - #" + id;
-    const content = "<body><h1>Nytt problem #" + id + "</h1><h3>Rapporterad av " + name + " | <a href:mailto=" + email + ">" + email + "</a></h3><p>" + issue + "</p></body>"
 
     try{
         const issue = JSON.parse(issueObj.issue);
         const name = issueObj.senderName;
         const email = issueObj.senderEmail;
 
+        console.map("email.test issue object: ", issueObj);
+        console.log("issue string: ", issue)
         console.log("name", name , "email", email)
     }
     catch(error){
