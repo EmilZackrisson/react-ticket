@@ -189,4 +189,4 @@ function test(issueObj) {
 }
 
 
-module.exports = { sendNewIssue, issueSolved, issueChanged };
+module.exports = { sendNewIssue, issueSolved, issueChanged, test };
