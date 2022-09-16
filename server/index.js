@@ -404,8 +404,8 @@ function notifyNewIssue() {
     console.table(newestIssue);
 
     // ONLY FOR TESTING
-    email.test(newestIssue);
-    return
+    // email.test(newestIssue);
+    // return
 
     email.sendNewIssue(newestIssue);
     discord.sendNewIssue(newestIssue);
