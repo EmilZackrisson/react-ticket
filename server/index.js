@@ -391,8 +391,7 @@ app.get("/api/test/email", (req, res) => {
 
 function notifyNewIssue() {
 
-  email.test(newestIssue);
-  return
+
 
 
   const sqlSelectHigestId =
@@ -403,6 +402,10 @@ function notifyNewIssue() {
     const newestId = newestIssue.id;
     console.log("Newest id: ", newestId);
     console.table(newestIssue);
+
+    // ONLY FOR TESTING
+    email.test(newestIssue);
+    return
 
     email.sendNewIssue(newestIssue);
     discord.sendNewIssue(newestIssue);
