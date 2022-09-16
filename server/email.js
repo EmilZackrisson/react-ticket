@@ -180,6 +180,8 @@ function test(issueObj) {
         const issue = JSON.parse(issueObj.issue);
         const name = issueObj.senderName;
         const email = issueObj.senderEmail;
+
+        console.log("name", name , "email", email)
     }
     catch(error){
         console.log("email.test error: ", error)
