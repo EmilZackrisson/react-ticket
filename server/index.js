@@ -412,7 +412,7 @@ function notifySolvedIssue(id, complete) {
       // console.log(newestIssue.id);
       // console.log("Newest id: ", newestId)
 
-      discord.sendCompleted(newestIssue);
+      discord.sendCompleted(solvedIssue);
       email.issueSolved(solvedIssue);
     });
   }
