@@ -8,11 +8,11 @@ function sendNewIssue(newIssue) {
     // const IMAGE_URL = 'https://homepages.cae.wisc.edu/~ece533/images/airplane.png';
     hook.setUsername('react-ticket');
     // hook.setAvatar(IMAGE_URL);
-    const issue = newIssue.issue;
+    const issue = JSON.parse(newIssue.issue);
     const senderName = newIssue.SenderName;
 
-    const title = "#" + issue.id + " | " + issue;
-    const field = "#" + issue.id + "";
+    const title = "#" + newIssue.id + " | " + issue;
+    const field = "#" + newIssue.id + "";
 
     const embed = new MessageBuilder()
         .setTitle(title)
@@ -34,15 +34,16 @@ function sendChangedIssue(changedIssue) {
     // const IMAGE_URL = 'https://homepages.cae.wisc.edu/~ece533/images/airplane.png';
     hook.setUsername('react-ticket');
     // hook.setAvatar(IMAGE_URL);
+    const issue = JSON.parse(changedIssue.issue);
 
-    const title = "#" + changedIssue.id + " | " + changedIssue.issue;
+    const title = "#" + changedIssue.id + " | " + issue;
     const field = "#" + changedIssue.id + "";
 
     const embed = new MessageBuilder()
         .setTitle(title)
-        .setAuthor(changedIssue.issue)
+        .setAuthor(issue)
         .setURL(process.env.REACT_TICKET_URL)
-        .addField(field, changedIssue.issue) //Problem
+        .addField(field, issue) //Problem
         // .addField('Second field', 'this is not inline')
         .setColor('#ff0000')
         // .setThumbnail('https://cdn.discordapp.com/embed/avatars/0.png')
@@ -58,15 +59,16 @@ function sendCompleted(completedIssue) {
     // const IMAGE_URL = 'https://homepages.cae.wisc.edu/~ece533/images/airplane.png';
     hook.setUsername('react-ticket');
     // hook.setAvatar(IMAGE_URL);
+    const issue = JSON.parse(changedIssue.issue);
 
-    const title = "#" + completedIssue.id + " | " + completedIssue.issue;
+    const title = "#" + completedIssue.id + " | " + issue;
     const field = "#" + completedIssue.id + "";
 
     const embed = new MessageBuilder()
         .setTitle(title)
         .setAuthor(completedIssue.SenderName)
         .setURL(process.env.REACT_TICKET_URL)
-        .addField(field, completedIssue.issue) //Problem
+        .addField(field, issue) //Problem
         // .addField('Second field', 'this is not inline')
         .setColor('#00FF00')
         // .setThumbnail('https://cdn.discordapp.com/embed/avatars/0.png')

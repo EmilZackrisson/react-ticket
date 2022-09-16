@@ -7,7 +7,8 @@ function sendNewIssue(issueObj) {
 
     const name = issueObj.senderName;
     const email = issueObj.senderEmail;
-    const issue = issueObj.issue.issue;
+    // const issue = issueObj.issue.issue;
+    const issue = JSON.parse(issueObj.issue);
 
     const id = issueObj.id;
     const subject = "Nytt problem - #" + id;
@@ -60,7 +61,8 @@ function sendNewIssue(issueObj) {
 function issueSolved(issueObj){
     const name = issueObj.senderName;
     const email = issueObj.senderEmail;
-    const issue = issueObj.issue.issue;
+    // const issue = issueObj.issue.issue;
+    const issue = JSON.parse(issueObj.issue);
     const id = issueObj.id;
     const subject = "Nytt problem - #" + id;
     const content = "<body><h1>Problem löst #" + id + "</h1><h3>Rapporterad av " + name + " | <a href:mailto=" + email + ">" + email + "</a></h3><p>" + issue + "</p></body>"
@@ -112,7 +114,8 @@ function issueSolved(issueObj){
 function issueChanged(issueObj){
     const name = issueObj.senderName;
     const email = issueObj.senderEmail;
-    const issue = issueObj.issue.issue;
+    // const issue = issueObj.issue.issue;
+    const issue = JSON.parse(issueObj.issue);
     const id = issueObj.id;
     const subject = "Nytt problem - #" + id;
     const content = "<body><h1>Problem uppdaterat #" + id + "</h1><h3>Rapporterad av " + name + " | <a href:mailto=" + email + ">" + email + "</a></h3><p>" + issue + "</p></body>"
