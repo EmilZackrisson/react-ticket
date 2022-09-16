@@ -7,11 +7,12 @@ function sendNewIssue(issueObj) {
 
     const name = issueObj.senderName;
     const email = issueObj.senderEmail;
-    const issue = issueObj.issue.issue;
+    // const issue = issueObj.issue.issue;
+    const issue = JSON.parse(issueObj.issue);
 
     const id = issueObj.id;
     const subject = "Nytt problem - #" + id;
-    const content = "<body><h1>Nytt problem #" + id + "</h1><h3>Rapporterad av " + name + " | <a href:mailto=" + email + ">" + email + "</a></h3><p>" + issue + "</p></body>"
+    const content = "<body><h1>Nytt problem #" + id + "</h1><h3>Rapporterad av " + name + " | <a href:mailto=" + email + ">" + email + "</a></h3><p>" + issue.issue + "</p></body>"
 
     if(email !== process.env.ADMIN_EMAIL){
         var to = [
@@ -60,10 +61,11 @@ function sendNewIssue(issueObj) {
 function issueSolved(issueObj){
     const name = issueObj.senderName;
     const email = issueObj.senderEmail;
-    const issue = issueObj.issue.issue;
+    // const issue = issueObj.issue.issue;
+    const issue = JSON.parse(issueObj.issue);
     const id = issueObj.id;
     const subject = "Nytt problem - #" + id;
-    const content = "<body><h1>Problem löst #" + id + "</h1><h3>Rapporterad av " + name + " | <a href:mailto=" + email + ">" + email + "</a></h3><p>" + issue + "</p></body>"
+    const content = "<body><h1>Problem löst #" + id + "</h1><h3>Rapporterad av " + name + " | <a href:mailto=" + email + ">" + email + "</a></h3><p>" + issue.issue + "</p></body>"
 
     if(email !== process.env.ADMIN_EMAIL){
         var to = [
@@ -112,10 +114,11 @@ function issueSolved(issueObj){
 function issueChanged(issueObj){
     const name = issueObj.senderName;
     const email = issueObj.senderEmail;
-    const issue = issueObj.issue.issue;
+    // const issue = issueObj.issue.issue;
+    const issue = JSON.parse(issueObj.issue);
     const id = issueObj.id;
     const subject = "Nytt problem - #" + id;
-    const content = "<body><h1>Problem uppdaterat #" + id + "</h1><h3>Rapporterad av " + name + " | <a href:mailto=" + email + ">" + email + "</a></h3><p>" + issue + "</p></body>"
+    const content = "<body><h1>Problem uppdaterat #" + id + "</h1><h3>Rapporterad av " + name + " | <a href:mailto=" + email + ">" + email + "</a></h3><p>" + issue.issue + "</p></body>"
 
     if(email !== process.env.ADMIN_EMAIL){
         var to = [
@@ -161,5 +164,31 @@ function issueChanged(issueObj){
     console.log(response);
 }
 
+function test(issueObj) {
+    // send email
 
-module.exports = { sendNewIssue, issueSolved, issueChanged };
+    // const name = issueObj.senderName;
+    // const email = issueObj.senderEmail;
+    // const issue = issueObj.issue.issue;
+    // const issue = JSON.parse(issueObj.issue);
+
+    // const id = issueObj.id;
+
+    try{
+        const issue = JSON.parse(issueObj.issue);
+        const name = issueObj.senderName;
+        const email = issueObj.senderEmail;
+
+        console.log("email.test issue object: ", issueObj);
+        console.log("issue string: ", issue.issue)
+        console.log("name", name , "email", email)
+    }
+    catch(error){
+        console.log("email.test error: ", error)
+        console.log("Issue Object: ", issueObj)
+        console.log("Issue: ", issue);
+    }
+}
+
+
+module.exports = { sendNewIssue, issueSolved, issueChanged, test };

@@ -390,6 +390,10 @@ app.get("/api/test/email", (req, res) => {
 });
 
 function notifyNewIssue() {
+
+
+
+
   const sqlSelectHigestId =
     "SELECT * FROM tickets WHERE id = ( SELECT MAX(id) FROM tickets );";
   db.query(sqlSelectHigestId, (err, result) => {
@@ -399,8 +403,14 @@ function notifyNewIssue() {
     console.log("Newest id: ", newestId);
     console.table(newestIssue);
 
+    // ONLY FOR TESTING
+    // email.test(newestIssue);
+    // return
+
     email.sendNewIssue(newestIssue);
     discord.sendNewIssue(newestIssue);
+
+    
   });
 }
 
