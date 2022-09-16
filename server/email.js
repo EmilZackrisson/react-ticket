@@ -179,13 +179,13 @@ function test(issueObj) {
         const name = issueObj.senderName;
         const email = issueObj.senderEmail;
 
-        console.map("email.test issue object: ", issueObj);
+        console.table("email.test issue object: ", issueObj);
         console.log("issue string: ", issue)
         console.log("name", name , "email", email)
     }
     catch(error){
         console.log("email.test error: ", error)
-        console.map("Issue Object: ", issueObj)
+        console.table("Issue Object: ", issueObj)
         console.log("Issue: ", issue);
     }
 }
