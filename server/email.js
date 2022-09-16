@@ -172,20 +172,20 @@ function test(issueObj) {
     // const issue = issueObj.issue.issue;
     // const issue = JSON.parse(issueObj.issue);
 
-    const id = issueObj.id;
+    // const id = issueObj.id;
 
     try{
         const issue = JSON.parse(issueObj.issue);
         const name = issueObj.senderName;
         const email = issueObj.senderEmail;
 
-        console.table("email.test issue object: ", issueObj);
+        console.log("email.test issue object: ", issueObj);
         console.log("issue string: ", issue)
         console.log("name", name , "email", email)
     }
     catch(error){
         console.log("email.test error: ", error)
-        console.table("Issue Object: ", issueObj)
+        console.log("Issue Object: ", issueObj)
         console.log("Issue: ", issue);
     }
 }
